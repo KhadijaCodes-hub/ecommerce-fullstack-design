@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Detail - Brand eCommerce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/product-detail.css" />
+</head>
+
+<body>
+
+  <!-- ===== TOP BAR ===== -->
+  <header class="top-bar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <img src="assets/images/logo-colored.png" alt="Logo Image">
+      </a>
+      <div class="search-bar">
+        <input type="text" placeholder="Search" id="searchInput" />
+        <div class="category-dropdown" id="catDropdown" onclick="toggleCatDropdown(event)">
+          <span id="catSelected">All category</span>
+          <i class="fas fa-chevron-down"></i>
+
+          <div class="cat-dropdown-menu" id="catDropdownMenu">
+            <div class="cat-dropdown-option" onclick="selectCat(this, 'All category')">All category</div>
+            <div class="cat-dropdown-option" onclick="selectCat(this, 'Automobiles')">Automobiles</div>
+            <div class="cat-dropdown-option" onclick="selectCat(this, 'Clothes')">Clothes</div>
+            <div class="cat-dropdown-option" onclick="selectCat(this, 'Electronics')">Electronics</div>
+            <div class="cat-dropdown-option" onclick="selectCat(this, 'Home & Garden')">Home & Garden</div>
+          </div>
+        </div>
+        <button>Search</button>
+      </div>
+      <div class="top-actions">
+        <a href="#" class="top-action"><i class="fas fa-user"></i><span>Profile</span></a>
+        <a href="#" class="top-action"><i class="bi bi-chat-left-text-fill"></i><span>Message</span></a>
+        <a href="#" class="top-action"><i class="bi bi-heart-fill"></i><span>Orders</span></a>
+        <a href="cart.html" class="top-action"><i class="fas fa-shopping-cart"></i><span>My cart</span></a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="main-nav">
+    <div class="container">
+      <ul class="nav-links">
+        <li><a href="#" class="active"><i class="fas fa-bars"></i> All category</a></li>
+        <li><a href="#">Hot offers</a></li>
+        <li><a href="#">Gift boxes</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="#">Menu item</a></li>
+        <li class="help-dropdown-wrapper">
+          <a href="#" onclick="toggleHelp(event)">
+            Help <i class="fas fa-chevron-down" id="helpArrow"></i>
+          </a>
+          <div class="help-menu" id="helpMenu">
+            <a href="#" class="help-option">Help Center</a>
+            <a href="#" class="help-option">Contact Us</a>
+            <a href="#" class="help-option">FAQs</a>
+            <a href="#" class="help-option">Disputes & Reports</a>
+            <a href="#" class="help-option">Buyer Protection</a>
+          </div>
+        </li>
+      </ul>
+      <div class="nav-right">
+        <div class="lang-dropdown" id="langDropdown" onclick="toggleLang()">
+          <span id="langSelected">English, USD</span>
+          <i class="fas fa-chevron-down" id="langArrow"></i>
+
+          <div class="lang-menu" id="langMenu">
+            <div class="lang-option" onclick="selectLang(this, 'English, USD')">
+              <img src="assets/images/usa.png" alt=""> English, USD
+            </div>
+            <div class="lang-option" onclick="selectLang(this, 'Arabic, AED')">
+              <img src="assets/images/arabic-emirates.png" alt=""> Arabic, AED
+            </div>
+            <div class="lang-option" onclick="selectLang(this, 'French, EUR')">
+              <img src="assets/images/france.png" alt=""> French, EUR
+            </div>
+            <div class="lang-option" onclick="selectLang(this, 'Russian, RUB')">
+              <img src="assets/images/russia.png" alt=""> Russian, RUB
+            </div>
+          </div>
+        </div>
+        <div class="ship-to" id="shipToDropdown" onclick="toggleShipTo()">
+          <span>Ship to</span>
+          <span class="flag-emoji">
+            <img src="assets/images/flag.png" alt="flag" style="height:16px;width:22px;">
+          </span>
+          <i class="fas fa-chevron-down" id="shipToArrow"></i>
+
+          <!-- Dropdown menu -->
+          <div class="ship-to-menu" id="shipToMenu">
+            <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/flag.png', 'DE')">
+              <img src="assets/images/flag.png" alt=""> Germany
+            </div>
+            <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/usa.png', 'US')">
+              <img src="assets/images/usa.png" alt=""> United States
+            </div>
+            <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/france.png', 'FR')">
+              <img src="assets/images/france.png" alt=""> France
+            </div>
+            <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/australia.png', 'AU')">
+              <img src="assets/images/australia.png" alt=""> Australia
+            </div>
+            <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/russia.png', 'RU')">
+              <img src="assets/images/russia.png" alt=""> Russia
+            </div>
+            <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/russia.png', 'RU')">
+              <img src="assets/images/great-britain.png" alt=""> Great Britain
+            </div>
+            <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/russia.png', 'RU')">
+              <img src="assets/images/denmark.png" alt=""> Denmark
+            </div>
+            <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/russia.png', 'RU')">
+              <img src="assets/images/china.png" alt=""> China
+            </div>
+            <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/russia.png', 'RU')">
+              <img src="assets/images/arabic-emirates.png" alt=""> Arabic Emirates
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="detail-page">
+    <div class="container">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb">
+        <a href="index.html">Home</a>
+        <i class="fas fa-chevron-right"></i>
+        <a href="#">Clothings</a>
+        <i class="fas fa-chevron-right"></i>
+        <a href="#">Men's wear</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>Summer clothing</span>
+      </nav>
+
+      <!-- ===== PRODUCT SECTION ===== -->
+      <div class="detail-card">
+        <div class="detail-layout">
+
+          <!-- LEFT: Image Gallery -->
+          <div class="gallery-section">
+            <div class="main-image">
+              <img src="assets/images/gray-shirt.png" alt="Product" id="mainImage" />
+            </div>
+            <div class="thumbnail-list">
+              <div class="thumb active" onclick="changeImage(this, 'assets/images/gray-shirt.png')">
+                <img src="assets/images/gray-shirt.png" alt="" />
+              </div>
+              <div class="thumb" onclick="changeImage(this, 'assets/images/white-shirt.png')">
+                <img src="assets/images/white-shirt.png" alt="" />
+              </div>
+              <div class="thumb" onclick="changeImage(this, 'assets/images/gray-collar.png')">
+                <img src="assets/images/gray-collar.png" alt="" />
+              </div>
+              <div class="thumb" onclick="changeImage(this, 'assets/images/shirt-man.png')">
+                <img src="assets/images/shirt-man.png" alt="" />
+              </div>
+              <div class="thumb" onclick="changeImage(this, 'assets/images/shirty.png')">
+                <img src="assets/images/shirty.png" alt="" />
+              </div>
+              <div class="thumb" onclick="changeImage(this, 'assets/images/gray-shirt.png')">
+                <img src="assets/images/gray-shirt.png" alt="" />
+              </div>
+            </div>
+          </div>
+
+          <!-- MIDDLE: Product Info -->
+          <div class="product-detail-info">
+            <p class="in-stock"><img src="assets/images/tick.png" alt="Tick pic" height="24px" width="24px">In stock</p>
+            <h1 class="detail-title">Mens Long Sleeve T-shirt Cotton Base Layer Slim Muscle</h1>
+
+            <div class="detail-meta">
+              <span class="stars-small"><img src="assets/images/star4.png" alt="rating" /></span>
+              <span class="rating-val">9.3</span>
+              <span class="dot">•</span>
+              <span class="reviews"><i class="bi bi-chat-left-text"></i> 32 reviews</span>
+              <span class="dot">•</span>
+              <span class="sold"><i class="fas fa-shopping-bag"></i> 154 sold</span>
+            </div>
+
+            <!-- Price Tiers -->
+            <div class="price-tiers">
+              <div class="tier">
+                <span class="tier-price red">$98.00</span>
+                <span class="tier-qty">50-100 pcs</span>
+              </div>
+              <div class="tier">
+                <span class="tier-price">$90.00</span>
+                <span class="tier-qty">100-700 pcs</span>
+              </div>
+              <div class="tier active-tier">
+                <span class="tier-price">$78.00</span>
+                <span class="tier-qty">700+ pcs</span>
+              </div>
+            </div>
+
+            <!-- Product Details Table -->
+            <div class="detail-table">
+              <div class="detail-row">
+                <span class="detail-label">Price:</span>
+                <span class="detail-value">Negotiable</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Type:</span>
+                <span class="detail-value">Classic shoes</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Material:</span>
+                <span class="detail-value">Plastic material</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Design:</span>
+                <span class="detail-value">Modern nice</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Customization:</span>
+                <span class="detail-value">Customized logo and design custom packages</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Protection:</span>
+                <span class="detail-value">Refund Policy</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Warranty:</span>
+                <span class="detail-value">2 years full warranty</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Supplier Card + Save for later -->
+          <div class="supplier-col">
+            <div class="supplier-card">
+              <div class="supplier-header">
+                <div class="supplier-avatar">R</div>
+                <div>
+                  <p class="supplier-label">Supplier</p>
+                  <p class="supplier-name">Guanjoi Trading LLC</p>
+                </div>
+              </div>
+              <div class="supplier-info">
+                <div class="supplier-row">
+                  <img src="assets/images/flag.png" alt="flag" style="height:16px;width:22px;">
+                  <span>Germany, Berlin</span>
+                </div>
+                <div class="supplier-row">
+                  <i class="fas fa-shield-alt"></i>
+                  <span>Verified Seller</span>
+                </div>
+                <div class="supplier-row">
+                  <i class="bi bi-globe"></i>
+                  <span>Worldwide shipping</span>
+                </div>
+              </div>
+              <button class="send-inquiry-btn">Send inquiry</button>
+              <a href="#" class="seller-profile-link">Seller's profile</a>
+
+            </div>
+            <div class="save-later">
+              <i class="far fa-heart"></i>
+              <span>Save for later</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ===== TABS + YOU MAY LIKE ===== -->
+      <div class="tabs-layout">
+
+        <!-- LEFT: Tabs -->
+        <div class="tabs-section">
+          <div class="tab-nav">
+            <button class="tab-btn active" data-tab="description">Description</button>
+            <button class="tab-btn" data-tab="reviews">Reviews</button>
+            <button class="tab-btn" data-tab="shipping">Shipping</button>
+            <button class="tab-btn" data-tab="about-seller">About seller</button>
+          </div>
+
+          <!-- Description Tab -->
+          <div class="tab-content active" id="description">
+            <p class="desc-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+              laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+              esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
+              do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,</p>
+            <p class="desc-text">Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+              aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+
+            <!-- Specs Table -->
+            <table class="specs-table">
+              <tr>
+                <td>Model</td>
+                <td>#8786867</td>
+              </tr>
+              <tr>
+                <td>Style</td>
+                <td>Classic style</td>
+              </tr>
+              <tr>
+                <td>Certificate</td>
+                <td>ISO-898921212</td>
+              </tr>
+              <tr>
+                <td>Size</td>
+                <td>34mm x 450mm x 19mm</td>
+              </tr>
+              <tr>
+                <td>Memory</td>
+                <td>36GB RAM</td>
+              </tr>
+            </table>
+
+            <!-- Features -->
+            <ul class="features-list">
+              <li><i class="fas fa-check"></i> Some great feature name here</li>
+              <li><i class="fas fa-check"></i> Lorem ipsum dolor sit amet, consectetur</li>
+              <li><i class="fas fa-check"></i> Duis aute irure dolor in reprehenderit</li>
+              <li><i class="fas fa-check"></i> Some great feature name here</li>
+            </ul>
+          </div>
+
+          <!-- Reviews Tab -->
+          <div class="tab-content" id="reviews">
+            <p class="desc-text">No reviews yet. Be the first to review this product.</p>
+          </div>
+
+          <!-- Shipping Tab -->
+          <div class="tab-content" id="shipping">
+            <p class="desc-text">Worldwide shipping available. Delivery in 5-10 business days.</p>
+          </div>
+
+          <!-- About Seller Tab -->
+          <div class="tab-content" id="about-seller">
+            <p class="desc-text">Guanjoi Trading LLC — Verified seller based in Germany, Berlin. Worldwide shipping with
+              refund policy.</p>
+          </div>
+        </div>
+
+        <!-- RIGHT: You May Like -->
+        <aside class="you-may-like">
+          <h4>You may like</h4>
+          <div class="like-list">
+            <a href="product-detail.html" class="like-item">
+              <img src="assets/images/coat.png" alt="" />
+              <div class="like-info">
+                <p>Men Blazers Sets Elegant Formal</p>
+                <span>$7.00 - $99.50</span>
+              </div>
+            </a>
+            <a href="product-detail.html" class="like-item">
+              <img src="assets/images/shirt.png" alt="" />
+              <div class="like-info">
+                <p>Men Shirt Sleeve Polo Contrast</p>
+                <span>$7.00 - $99.50</span>
+              </div>
+            </a>
+            <a href="product-detail.html" class="like-item">
+              <img src="assets/images/jacket.png" alt="" />
+              <div class="like-info">
+                <p>Apple Watch Series Space Gray</p>
+                <span>$7.00 - $99.50</span>
+              </div>
+            </a>
+            <a href="product-detail.html" class="like-item">
+              <img src="assets/images/blue-shirt.png" alt="" />
+              <div class="like-info">
+                <p>Basketball Crew Socks Long Stuff</p>
+                <span>$7.00 - $99.50</span>
+              </div>
+            </a>
+            <a href="product-detail.html" class="like-item">
+              <img src="assets/images/bag2.png" alt="" />
+              <div class="like-info">
+                <p>New Summer Men's castrol T-Shirts</p>
+                <span>$7.00 - $99.50</span>
+              </div>
+            </a>
+          </div>
+        </aside>
+
+      </div>
+
+      <!-- ===== RELATED PRODUCTS ===== -->
+      <div class="related-section">
+        <h3>Related products</h3>
+        <div class="related-grid">
+          <a href="product-detail.html" class="related-card">
+            <img src="assets/images/bag.png" alt="" />
+            <p>Xiaomi Redmi 8 Original</p>
+            <span>$32.00-$40.00</span>
+          </a>
+          <a href="product-detail.html" class="related-card">
+            <img src="assets/images/smartwatch.png" alt="" />
+            <p>Xiaomi Redmi 8 Original</p>
+            <span>$32.00-$40.00</span>
+          </a>
+          <a href="product-detail.html" class="related-card">
+            <img src="assets/images/white-headphone.png" alt="" />
+            <p>Xiaomi Redmi 8 Original</p>
+            <span>$32.00-$40.00</span>
+          </a>
+          <a href="product-detail.html" class="related-card">
+            <img src="assets/images/short.png" alt="" />
+            <p>Xiaomi Redmi 8 Original</p>
+            <span>$32.00-$40.00</span>
+          </a>
+          <a href="product-detail.html" class="related-card">
+            <img src="assets/images/jug.png" alt="" />
+            <p>Xiaomi Redmi 8 Original</p>
+            <span>$32.00-$40.00</span>
+          </a>
+          <a href="product-detail.html" class="related-card">
+            <img src="assets/images/appliance.png" alt="" />
+            <p>Xiaomi Redmi 8 Original</p>
+            <span>$32.00-$40.00</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- ===== DISCOUNT BANNER ===== -->
+      <div class="discount-banner">
+        <div class="discount-text">
+          <h3>Super discount on more than 100 USD</h3>
+          <p>Have you ever finally just write dummy info</p>
+        </div>
+        <a href="#" class="shop-now-btn">Shop now</a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="logo"><img src="assets/images/logo-colored.png" alt="Logo"></div>
+          <p>Best information about the company goes here but now lorem ipsum is</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>About</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Find store</a></li>
+            <li><a href="#">Categories</a></li>
+            <li><a href="#">Blogs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Partnership</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Find store</a></li>
+            <li><a href="#">Categories</a></li>
+            <li><a href="#">Blogs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Information</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Money Refund</a></li>
+            <li><a href="#">Shipping</a></li>
+            <li><a href="#">Contact us</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>For users</h4>
+          <ul>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="login.html">Register</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">My Orders</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Get app</h4>
+          <div class="app-links"><img src="assets/images/app-store.png" alt="App Store" /><img
+              src="assets/images/google-play.png" alt="Google Play" /></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+        <p>&copy; 2023 Ecommerce.</p>
+        <div class="language" id="footerLang" onclick="toggleFooterLang()">
+          <img src="assets/images/usa.png" alt="flag" id="footerFlag">
+          <p id="footerLangText">English</p>
+          <i class="fas fa-chevron-up" id="footerLangArrow"></i>
+          <div class="footer-lang-menu" id="footerLangMenu">
+            <div class="footer-lang-option" onclick="selectFooterLang(this, 'assets/images/usa.png', 'English')">
+              <img src="assets/images/usa.png" alt=""> English
+            </div>
+            <div class="footer-lang-option"
+              onclick="selectFooterLang(this, 'assets/images/arabic-emirates.png', 'Arabic')">
+              <img src="assets/images/arabic-emirates.png" alt=""> Arabic
+            </div>
+            <div class="footer-lang-option" onclick="selectFooterLang(this, 'assets/images/france.png', 'French')">
+              <img src="assets/images/france.png" alt=""> French
+            </div>
+            <div class="footer-lang-option" onclick="selectFooterLang(this, 'assets/images/russia.png', 'Russian')">
+              <img src="assets/images/russia.png" alt=""> Russian
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="js/home.js"></script>
+  <script src="js/product-detail.js"></script>
+</body>
+
+</html>
