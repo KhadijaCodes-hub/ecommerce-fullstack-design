@@ -48,8 +48,8 @@
   <nav class="main-nav">
     <div class="container">
       <ul class="nav-links">
-        <li><a href="#" class="active"><i class="fas fa-bars"></i> All category</a></li>
-        <li><a href="#">Hot offers</a></li>
+        <li><a href="products.html" class="active"><i class="fas fa-bars"></i> All category</a></li>
+        <li><a href="products.html?category=offers">Hot offers</a></li>
         <li><a href="#">Gift boxes</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="#">Menu item</a></li>
@@ -272,6 +272,17 @@
           </div>
 
         </div>
+        <!-- detail-table ke baad ye add karo -->
+        <div class="add-to-cart-section">
+          <div class="qty-selector">
+            <button onclick="decreaseQty()">−</button>
+            <input type="number" id="qtyInput" value="1" min="1" />
+            <button onclick="increaseQty()">+</button>
+          </div>
+          <button class="add-to-cart-btn" onclick="addToCart()">
+            <i class="fas fa-shopping-cart"></i> Add to cart
+          </button>
+        </div>
 
       </div>
 
@@ -438,6 +449,7 @@
       </div>
 
     </div>
+
   </main>
 
   <!-- ===== FOOTER ===== -->
@@ -524,6 +536,7 @@
       </div>
     </div>
   </footer>
+  <script src="js/api.js"></script>
   <script src="js/home.js"></script>
   <script src="js/product-detail.js"></script>
 </body>

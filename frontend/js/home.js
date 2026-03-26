@@ -142,3 +142,54 @@ document.addEventListener('click', function(e) {
     el.classList.remove('open');
   }
 });
+
+// ===== FETCH FEATURED PRODUCTS =====
+async function loadFeaturedProducts() {
+  try {
+    const products = await getProducts();
+    const grid = document.querySelector('.rec-grid');
+    if (!grid) return;
+
+    // Grid clear karo
+    grid.innerHTML = '';
+
+    // Products render karo
+    products.forEach(product => {
+      const card = document.createElement('a');
+      card.href = `product-detail.html?id=${product.id}`;
+      card.className = 'rec-card';
+      card.innerHTML = `
+        <img src="${product.image}" alt="${product.name}"/>
+        <div class="price">$${product.price.toFixed(2)}</div>
+        <div class="desc">${product.name}</div>
+      `;
+      grid.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error('Products load nahi hue:', err);
+  }
+}
+
+// Page load hone pe call karo
+loadFeaturedProducts();
+
+// ===== HOME PAGE SEARCH =====
+const homeSearchBtn   = document.querySelector('.search-bar button');
+const homeSearchInput = document.getElementById('searchInput');
+
+if (homeSearchBtn) {
+  homeSearchBtn.addEventListener('click', function() {
+    const q = homeSearchInput.value.trim();
+    if (q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+  });
+}
+
+if (homeSearchInput) {
+  homeSearchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      const q = this.value.trim();
+      if (q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+    }
+  });
+}
