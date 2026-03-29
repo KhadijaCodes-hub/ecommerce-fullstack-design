@@ -41,9 +41,9 @@ document.querySelectorAll('.filter-header').forEach(header => {
   section.classList.add('open');
 
   header.addEventListener('click', () => {
-    const icon    = header.querySelector('i');
+    const icon = header.querySelector('i');
     const content = section.querySelectorAll(':scope > *:not(.filter-header)');
-    const isOpen  = section.classList.contains('open');
+    const isOpen = section.classList.contains('open');
 
     if (isOpen) {
       content.forEach(el => { el.style.display = 'none'; });
@@ -69,9 +69,9 @@ function updateFilterTags() {
   if (checked.length === 0) return;
 
   checked.forEach(input => {
-    const labelEl    = input.closest('label');
+    const labelEl = input.closest('label');
     const dataRating = labelEl.getAttribute('data-rating');
-    const tagText    = dataRating ? dataRating : labelEl.textContent.trim();
+    const tagText = dataRating ? dataRating : labelEl.textContent.trim();
 
     const tag = document.createElement('div');
     tag.className = 'filter-tag';
@@ -82,19 +82,19 @@ function updateFilterTags() {
     filterTagsContainer.appendChild(tag);
   });
 
-  const clearBtn       = document.createElement('button');
-  clearBtn.className   = 'clear-all-btn';
+  const clearBtn = document.createElement('button');
+  clearBtn.className = 'clear-all-btn';
   clearBtn.textContent = 'Clear all filter';
-  clearBtn.onclick     = clearAllFilters;
+  clearBtn.onclick = clearAllFilters;
   filterTagsContainer.appendChild(clearBtn);
 }
 
 function removeTag(btn) {
   const label = btn.getAttribute('data-label');
   document.querySelectorAll('.checkbox-list input[type="checkbox"]').forEach(input => {
-    const labelEl    = input.closest('label');
+    const labelEl = input.closest('label');
     const dataRating = labelEl.getAttribute('data-rating');
-    const current    = dataRating ? dataRating : labelEl.textContent.trim();
+    const current = dataRating ? dataRating : labelEl.textContent.trim();
     if (current === label) {
       input.checked = false;
       input.dispatchEvent(new Event('change'));
@@ -118,17 +118,17 @@ function clearAllFilters() {
 // ===== PRICE RANGE SLIDER =====
 const priceMin = document.getElementById('priceMin');
 const priceMax = document.getElementById('priceMax');
-const minVal   = document.getElementById('minVal');
-const maxVal   = document.getElementById('maxVal');
-const slider   = document.querySelector('.price-slider');
+const minVal = document.getElementById('minVal');
+const maxVal = document.getElementById('maxVal');
+const slider = document.querySelector('.price-slider');
 
 function updateSliderTrack() {
   if (!priceMin || !priceMax) return;
 
-  const min      = parseInt(priceMin.value);
-  const max      = parseInt(priceMax.value);
-  const total    = parseInt(priceMin.getAttribute('max'));
-  const leftPct  = (min / total) * 100;
+  const min = parseInt(priceMin.value);
+  const max = parseInt(priceMax.value);
+  const total = parseInt(priceMin.getAttribute('max'));
+  const leftPct = (min / total) * 100;
   const rightPct = 100 - (max / total) * 100;
 
   slider.style.background = `linear-gradient(to right,
@@ -142,36 +142,36 @@ function updateSliderTrack() {
 }
 
 if (priceMin && priceMax) {
-  priceMin.addEventListener('input', function() {
+  priceMin.addEventListener('input', function () {
     if (parseInt(this.value) > parseInt(priceMax.value)) this.value = priceMax.value;
     updateSliderTrack();
   });
 
-  priceMax.addEventListener('input', function() {
+  priceMax.addEventListener('input', function () {
     if (parseInt(this.value) < parseInt(priceMin.value)) this.value = priceMin.value;
     updateSliderTrack();
   });
 
   if (minVal) {
-    minVal.addEventListener('input', function() {
+    minVal.addEventListener('input', function () {
       let val = parseInt(this.value);
       if (isNaN(val)) return;
       if (val < 0) val = 0;
       if (val > parseInt(priceMax.value)) val = parseInt(priceMax.value);
       priceMin.value = val;
-      this.value     = val;
+      this.value = val;
       updateSliderTrack();
     });
   }
 
   if (maxVal) {
-    maxVal.addEventListener('input', function() {
+    maxVal.addEventListener('input', function () {
       let val = parseInt(this.value);
       if (isNaN(val)) return;
       if (val > 999999) val = 999999;
       if (val < parseInt(priceMin.value)) val = parseInt(priceMin.value);
       priceMax.value = val;
-      this.value     = val;
+      this.value = val;
       updateSliderTrack();
     });
   }
@@ -239,7 +239,7 @@ async function loadProducts(filters = {}) {
         <button class="wishlist-btn"><i class="far fa-heart"></i></button>
       `;
 
-      card.querySelector('.wishlist-btn').addEventListener('click', function() {
+      card.querySelector('.wishlist-btn').addEventListener('click', function () {
         this.classList.toggle('active');
         const icon = this.querySelector('i');
         icon.classList.toggle('far');
@@ -260,7 +260,7 @@ async function loadProducts(filters = {}) {
 
 // ===== CATEGORY FILTER =====
 document.querySelectorAll('.filter-list a').forEach(link => {
-  link.addEventListener('click', function(e) {
+  link.addEventListener('click', function (e) {
     e.preventDefault();
     document.querySelectorAll('.filter-list a').forEach(l => l.classList.remove('active'));
     this.classList.add('active');
@@ -271,10 +271,10 @@ document.querySelectorAll('.filter-list a').forEach(link => {
 
 // ===== BRAND / FEATURES / RATINGS / MANUFACTURER FILTER =====
 document.querySelectorAll('.checkbox-list input[type="checkbox"]').forEach(input => {
-  input.addEventListener('change', function() {
-    const labelEl      = this.closest('label');
-    const dataRating   = labelEl.getAttribute('data-rating');
-    const section      = this.closest('.filter-section');
+  input.addEventListener('change', function () {
+    const labelEl = this.closest('label');
+    const dataRating = labelEl.getAttribute('data-rating');
+    const section = this.closest('.filter-section');
     const sectionTitle = section.querySelector('.filter-header h4').textContent.trim();
 
     if (sectionTitle === 'Brands') {
@@ -314,7 +314,7 @@ document.querySelectorAll('.checkbox-list input[type="checkbox"]').forEach(input
 
 // ===== CONDITION FILTER =====
 document.querySelectorAll('.radio-list input[type="radio"]').forEach(input => {
-  input.addEventListener('change', function() {
+  input.addEventListener('change', function () {
     const label = this.closest('label').textContent.trim();
     if (label === 'Any') {
       delete activeFilters.condition;
@@ -326,7 +326,7 @@ document.querySelectorAll('.radio-list input[type="radio"]').forEach(input => {
 });
 
 // ===== PRICE RANGE APPLY =====
-document.querySelector('.apply-btn').addEventListener('click', function() {
+document.querySelector('.apply-btn').addEventListener('click', function () {
   const min = document.getElementById('minVal').value;
   const max = document.getElementById('maxVal').value;
   if (min) activeFilters.min_price = min;
@@ -337,11 +337,11 @@ document.querySelector('.apply-btn').addEventListener('click', function() {
 });
 
 // ===== SEARCH =====
-const searchBtn   = document.querySelector('.search-bar button');
+const searchBtn = document.querySelector('.search-bar button');
 const searchInput = document.getElementById('searchInput');
 
 if (searchBtn) {
-  searchBtn.addEventListener('click', function() {
+  searchBtn.addEventListener('click', function () {
     activeFilters.search = searchInput.value.trim();
     if (!activeFilters.search) delete activeFilters.search;
     loadProducts(activeFilters);
@@ -349,7 +349,7 @@ if (searchBtn) {
 }
 
 if (searchInput) {
-  searchInput.addEventListener('keypress', function(e) {
+  searchInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
       activeFilters.search = this.value.trim();
       if (!activeFilters.search) delete activeFilters.search;
@@ -358,12 +358,24 @@ if (searchInput) {
   });
 }
 
-// ===== URL SE SEARCH QUERY LO =====
+// ===== URL SE QUERY LO =====
 const urlParams = new URLSearchParams(window.location.search);
 const urlSearch = urlParams.get('search');
+const urlCategory = urlParams.get('category');
+
 if (urlSearch) {
   activeFilters.search = urlSearch;
   if (searchInput) searchInput.value = urlSearch;
+}
+
+if (urlCategory) {
+  activeFilters.category = urlCategory;
+  // Sidebar mein bhi active kar do
+  document.querySelectorAll('.filter-list a').forEach(link => {
+    if (link.textContent.trim().toLowerCase() === urlCategory.toLowerCase()) {
+      link.classList.add('active');
+    }
+  });
 }
 
 // ===== PAGE LOAD =====

@@ -35,17 +35,16 @@ function renderCart() {
   const cartCard = document.querySelector('.cart-card');
   if (!cartCard) return;
 
-  // Bottom actions save karo
   const bottomActions = cartCard.querySelector('.cart-bottom-actions');
 
-  // Purane items hatao
-  cartCard.querySelectorAll('.cart-item').forEach(item => item.remove());
+  // Purane items AND empty messages dono hatao
+  cartCard.querySelectorAll('.cart-item, .empty-cart-msg').forEach(el => el.remove());
 
-  // Cart title count
   document.getElementById('cartCount').textContent = `(${cart.length})`;
 
   if (cart.length === 0) {
     const empty = document.createElement('div');
+    empty.className    = 'empty-cart-msg'; // class dalo taake identify ho sake
     empty.style.cssText = 'padding:60px;text-align:center;';
     empty.innerHTML = `
       <i class="fas fa-shopping-cart" style="font-size:48px;color:var(--deal-border)"></i>
@@ -60,7 +59,6 @@ function renderCart() {
     return;
   }
 
-  // Items render karo
   cart.forEach((item, index) => {
     const div = document.createElement('div');
     div.className = 'cart-item';
@@ -74,7 +72,7 @@ function renderCart() {
         <p class="item-seller">Price: $${item.price.toFixed(2)} each</p>
         <div class="item-actions">
           <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
-          <button class="save-btn">Save for later</button>
+          <button class="save-btn" onclick="moveToSaved(${index})">Save for later</button>
         </div>
       </div>
       <div class="item-right">
@@ -107,7 +105,6 @@ function updateQty(index, value) {
   saveCart(cart);
   calculateTotals();
 
-  // Price update karo
   const items = document.querySelectorAll('.cart-item');
   if (items[index]) {
     items[index].querySelector('.item-price').textContent =
@@ -121,6 +118,24 @@ function removeAll() {
   renderCart();
 }
 
+// ===== MOVE CART ITEM TO SAVED =====
+function moveToSaved(index) {
+  const cart  = getCart();
+  const item  = cart[index];
+  const saved = JSON.parse(localStorage.getItem('savedItems')) || [];
+
+  const exists = saved.find(s => s.id === item.id);
+  if (!exists) {
+    saved.push({ id: item.id, title: item.title, price: item.price, image: item.image });
+    localStorage.setItem('savedItems', JSON.stringify(saved));
+  }
+
+  cart.splice(index, 1);
+  saveCart(cart);
+  renderCart();
+  renderSavedItems();
+}
+
 // ===== APPLY COUPON =====
 document.querySelector('.apply-coupon-btn').addEventListener('click', function() {
   const code = document.querySelector('.coupon-input input').value.trim().toUpperCase();
@@ -131,24 +146,60 @@ document.querySelector('.apply-coupon-btn').addEventListener('click', function()
   }
 });
 
-// ===== MOVE TO CART (saved items) =====
-document.querySelectorAll('.move-to-cart-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    const card  = this.closest('.saved-card');
-    const title = card.querySelector('.saved-title').textContent;
-    const price = parseFloat(card.querySelector('.saved-price').textContent.replace('$', ''));
-    const image = card.querySelector('img').src;
+// ===== RENDER SAVED ITEMS =====
+function renderSavedItems() {
+  const saved   = JSON.parse(localStorage.getItem('savedItems')) || [];
+  const section = document.querySelector('.saved-later-section');
+  const grid    = document.querySelector('.saved-grid');
+  if (!grid || !section) return;
 
-    const cart = getCart();
-    cart.push({ id: Date.now().toString(), title, price, image, qty: 1 });
-    saveCart(cart);
-    renderCart();
+  grid.innerHTML = '';
 
-    card.style.opacity    = '0';
-    card.style.transition = 'opacity 0.3s';
-    setTimeout(() => card.remove(), 300);
+  if (saved.length === 0) {
+    // Saved section hide karo agar kuch nahi
+    section.style.display = 'none';
+    return;
+  }
+
+  // Saved section show karo
+  section.style.display = 'block';
+
+  saved.forEach((item, index) => {
+    const card = document.createElement('div');
+    card.className = 'saved-card';
+    card.innerHTML = `
+      <img src="${item.image}" alt="${item.title}"/>
+      <p class="saved-price">$${item.price.toFixed(2)}</p>
+      <p class="saved-title">${item.title}</p>
+      <button class="move-to-cart-btn" onclick="moveSavedToCart(${index})">
+        <i class="fas fa-shopping-cart"></i> Move to cart
+      </button>
+    `;
+    grid.appendChild(card);
   });
-});
+}
+
+// ===== MOVE SAVED TO CART =====
+function moveSavedToCart(index) {
+  const saved = JSON.parse(localStorage.getItem('savedItems')) || [];
+  const item  = saved[index];
+
+  const cart   = getCart();
+  const exists = cart.find(c => c.id === item.id);
+  if (exists) {
+    exists.qty += 1;
+  } else {
+    cart.push({ id: item.id, title: item.title, price: item.price, image: item.image, qty: 1 });
+  }
+  saveCart(cart);
+
+  saved.splice(index, 1);
+  localStorage.setItem('savedItems', JSON.stringify(saved));
+
+  renderSavedItems();
+  renderCart();
+}
 
 // ===== PAGE LOAD =====
 renderCart();
+renderSavedItems();

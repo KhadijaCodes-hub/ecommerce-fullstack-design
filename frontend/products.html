@@ -48,8 +48,8 @@
     <nav class="main-nav">
         <div class="container">
             <ul class="nav-links">
-                <li><a href="#" class="active"><i class="fas fa-bars"></i> All category</a></li>
-                <li><a href="#">Hot offers</a></li>
+                <li><a href="products.html" class="active"><i class="fas fa-bars"></i> All category</a></li>
+                <li><a href="products.html?category=offers">Hot offers</a></li>
                 <li><a href="#">Gift boxes</a></li>
                 <li><a href="#">Projects</a></li>
                 <li><a href="#">Menu item</a></li>
@@ -583,6 +583,26 @@
     <script src="js/api.js"></script>
     <script src="js/home.js"></script>
     <script src="js/products.js"></script>
+    <script>
+  // Newsletter override — products page ke liye
+  const nlBtn   = document.querySelector('.newsletter-form button');
+  const nlInput = document.querySelector('.newsletter-form input[type="email"]');
+  if (nlBtn && nlInput) {
+    nlBtn.onclick = function() {
+      const email = nlInput.value.trim();
+      if (!email) { alert('Please enter your email!'); return; }
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!regex.test(email)) { alert('Please enter a valid email!'); return; }
+      nlBtn.textContent = '✓ Subscribed!';
+      nlBtn.style.background = '#00B517';
+      nlInput.value = '';
+      setTimeout(() => {
+        nlBtn.textContent = 'Subscribe';
+        nlBtn.style.background = '';
+      }, 3000);
+    };
+  }
+</script>
 </body>
 
 </html>

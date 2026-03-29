@@ -5,59 +5,59 @@
 
 // ===== TABS =====
 document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById(btn.dataset.tab).classList.add('active');
-    });
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
 });
 
 // ===== IMAGE GALLERY =====
 function changeImage(thumb, src) {
-    document.getElementById('mainImage').src = src;
-    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-    thumb.classList.add('active');
+  document.getElementById('mainImage').src = src;
+  document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
 }
 
 // ===== GET ID FROM URL =====
 function getProductIdFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('id');
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id');
 }
 
 // ===== LOAD PRODUCT DETAIL =====
 async function loadProductDetail() {
-    const id = getProductIdFromURL();
+  const id = getProductIdFromURL();
 
-    if (!id) {
-        console.log('No id in URL — static data show ho raha hai');
-        return;
-    }
+  if (!id) {
+    console.log('No id in URL — static data show ho raha hai');
+    return;
+  }
 
-    try {
-        const product = await getProduct(id);
-        if (!product) return;
+  try {
+    const product = await getProduct(id);
+    if (!product) return;
 
-        // Title
-        document.querySelector('.detail-title').textContent = product.name;
+    // Title
+    document.querySelector('.detail-title').textContent = product.name;
 
-        // In stock
-        document.querySelector('.in-stock').innerHTML = `
+    // In stock
+    document.querySelector('.in-stock').innerHTML = `
       <i class="fas fa-check-circle"></i> In stock
     `;
 
-        // Rating
-        document.querySelector('.rating-val').textContent = product.rating;
-        document.querySelector('.reviews').innerHTML = `
+    // Rating
+    document.querySelector('.rating-val').textContent = product.rating;
+    document.querySelector('.reviews').innerHTML = `
       <i class="bi bi-chat-left-text"></i> 32 reviews
     `;
-        document.querySelector('.sold').innerHTML = `
+    document.querySelector('.sold').innerHTML = `
       <i class="fas fa-shopping-bag"></i> ${product.orders} sold
     `;
 
-        // Price tiers
-        document.querySelector('.price-tiers').innerHTML = `
+    // Price tiers
+    document.querySelector('.price-tiers').innerHTML = `
       <div class="tier">
         <span class="tier-price red">$${product.price.toFixed(2)}</span>
         <span class="tier-qty">50-100 pcs</span>
@@ -72,8 +72,8 @@ async function loadProductDetail() {
       </div>
     `;
 
-        // Details table
-        document.querySelector('.detail-table').innerHTML = `
+    // Details table
+    document.querySelector('.detail-table').innerHTML = `
       <div class="detail-row">
         <span class="detail-label">Price:</span>
         <span class="detail-value">Negotiable</span>
@@ -104,18 +104,18 @@ async function loadProductDetail() {
       </div>
     `;
 
-        // Main image
-        document.getElementById('mainImage').src = product.image;
+    // Main image
+    document.getElementById('mainImage').src = product.image;
 
-        // Thumbnails
-        document.querySelector('.thumbnail-list').innerHTML = `
+    // Thumbnails
+    document.querySelector('.thumbnail-list').innerHTML = `
       <div class="thumb active" onclick="changeImage(this, '${product.image}')">
         <img src="${product.image}" alt=""/>
       </div>
     `;
 
-        // Description tab
-        document.getElementById('description').innerHTML = `
+    // Description tab
+    document.getElementById('description').innerHTML = `
       <p class="desc-text">${product.description}</p>
       <table class="specs-table">
         <tr><td>Category</td><td>${product.category}</td></tr>
@@ -132,45 +132,74 @@ async function loadProductDetail() {
       </ul>
     `;
 
-        // Page title
-        document.title = `${product.name} - Brand eCommerce`;
+    // Page title
+    document.title = `${product.name} - Brand eCommerce`;
 
-        // Load related products
-        loadRelatedProducts(product.category, id);
+    // Load related + you may like
+    loadRelatedProducts(product.category, id);
+    loadYouMayLike(product.category, id);
 
-    } catch (err) {
-        console.error('Product load nahi hua:', err);
-    }
+  } catch (err) {
+    console.error('Product load nahi hua:', err);
+  }
 }
 
 // ===== LOAD RELATED PRODUCTS =====
 async function loadRelatedProducts(category, currentId) {
-    try {
-        const products = await getProducts({ category });
-        const grid = document.querySelector('.related-grid');
-        if (!grid) return;
+  try {
+    const products = await getProducts({ category });
+    const grid = document.querySelector('.related-grid');
+    if (!grid) return;
 
-        // Current product exclude karo
-        const related = products.filter(p => p.id !== currentId).slice(0, 6);
+    const related = products.filter(p => p.id !== currentId).slice(0, 6);
+    if (related.length === 0) return;
 
-        if (related.length === 0) return;
-
-        grid.innerHTML = '';
-        related.forEach(product => {
-            const card = document.createElement('a');
-            card.href = `product-detail.html?id=${product.id}`;
-            card.className = 'related-card';
-            card.innerHTML = `
+    grid.innerHTML = '';
+    related.forEach(product => {
+      const card = document.createElement('a');
+      card.href      = `product-detail.html?id=${product.id}`;
+      card.className = 'related-card';
+      card.innerHTML = `
         <img src="${product.image}" alt="${product.name}"/>
         <p>${product.name}</p>
         <span>$${product.price.toFixed(2)}</span>
       `;
-            grid.appendChild(card);
-        });
+      grid.appendChild(card);
+    });
 
-    } catch (err) {
-        console.error('Related products load nahi hue:', err);
-    }
+  } catch (err) {
+    console.error('Related products load nahi hue:', err);
+  }
+}
+
+// ===== LOAD YOU MAY LIKE =====
+async function loadYouMayLike(category, currentId) {
+  try {
+    const products = await getProducts({ category });
+    const list = document.querySelector('.like-list');
+    if (!list) return;
+
+    const filtered = products.filter(p => p.id !== currentId).slice(0, 5);
+    if (filtered.length === 0) return;
+
+    list.innerHTML = '';
+    filtered.forEach(product => {
+      const item = document.createElement('a');
+      item.href      = `product-detail.html?id=${product.id}`;
+      item.className = 'like-item';
+      item.innerHTML = `
+        <img src="${product.image}" alt="${product.name}"/>
+        <div class="like-info">
+          <p>${product.name}</p>
+          <span>$${product.price.toFixed(2)}</span>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+
+  } catch (err) {
+    console.error('You may like load nahi hua:', err);
+  }
 }
 
 // ===== SEARCH =====
@@ -195,51 +224,74 @@ if (searchInput) {
 
 // ===== PAGE LOAD =====
 loadProductDetail();
+
 // ===== CART FUNCTIONS =====
 function getCart() {
-    return JSON.parse(localStorage.getItem('cart')) || [];
+  return JSON.parse(localStorage.getItem('cart')) || [];
 }
 
 function saveCart(cart) {
-    localStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem('cart', JSON.stringify(cart));
 }
 
 function decreaseQty() {
-    const input = document.getElementById('qtyInput');
-    if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
+  const input = document.getElementById('qtyInput');
+  if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
 }
 
 function increaseQty() {
-    const input = document.getElementById('qtyInput');
-    input.value = parseInt(input.value) + 1;
+  const input = document.getElementById('qtyInput');
+  input.value = parseInt(input.value) + 1;
 }
 
 function addToCart() {
-    const id = getProductIdFromURL();
-    const qty = parseInt(document.getElementById('qtyInput').value);
-    const title = document.querySelector('.detail-title').textContent;
-    const price = parseFloat(document.querySelector('.tier-price').textContent.replace('$', ''));
-    const image = document.getElementById('mainImage').src;
+  const id    = getProductIdFromURL();
+  const qty   = parseInt(document.getElementById('qtyInput').value);
+  const title = document.querySelector('.detail-title').textContent;
+  const price = parseFloat(document.querySelector('.tier-price').textContent.replace('$', ''));
+  const image = document.getElementById('mainImage').src;
 
-    const cart = getCart();
+  const cart     = getCart();
+  const existing = cart.find(item => item.id === id);
+  if (existing) {
+    existing.qty += qty;
+  } else {
+    cart.push({ id, title, price, image, qty });
+  }
 
-    // Already exist karta hai?
-    const existing = cart.find(item => item.id === id);
-    if (existing) {
-        existing.qty += qty;
-    } else {
-        cart.push({ id, title, price, image, qty });
-    }
+  saveCart(cart);
 
-    saveCart(cart);
-
-    // Button feedback
-    const btn = document.querySelector('.add-to-cart-btn');
-    btn.innerHTML = '<i class="fas fa-check"></i> Added to cart!';
-    btn.style.background = '#00B517';
-    setTimeout(() => {
-        btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Add to cart';
-        btn.style.background = '';
-    }, 2000);
+  const btn = document.querySelector('.add-to-cart-btn');
+  btn.innerHTML        = '<i class="fas fa-check"></i> Added to cart!';
+  btn.style.background = '#00B517';
+  setTimeout(() => {
+    btn.innerHTML        = '<i class="fas fa-shopping-cart"></i> Add to cart';
+    btn.style.background = '';
+  }, 2000);
 }
 
+// ===== SEND INQUIRY =====
+document.querySelector('.send-inquiry-btn').addEventListener('click', function() {
+  const name = document.querySelector('.detail-title').textContent;
+  alert(`Your inquiry for "${name}" has been sent to the supplier!`);
+});
+
+// ===== SAVE FOR LATER =====
+document.querySelector('.save-later').addEventListener('click', function() {
+  const id    = getProductIdFromURL();
+  const title = document.querySelector('.detail-title').textContent;
+  const image = document.getElementById('mainImage').src;
+  const price = parseFloat(document.querySelector('.tier-price').textContent.replace('$', ''));
+
+  let saved      = JSON.parse(localStorage.getItem('savedItems')) || [];
+  const exists   = saved.find(item => item.id === id);
+
+  if (!exists) {
+    saved.push({ id, title, image, price });
+    localStorage.setItem('savedItems', JSON.stringify(saved));
+    this.innerHTML   = '<i class="fas fa-heart"></i> <span>Saved!</span>';
+    this.style.color = 'var(--red-badge)';
+  } else {
+    alert('Already saved!');
+  }
+});

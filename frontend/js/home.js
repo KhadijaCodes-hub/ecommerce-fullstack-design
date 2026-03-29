@@ -193,3 +193,64 @@ if (homeSearchInput) {
     }
   });
 }
+
+// ===== SEND INQUIRY =====
+const inquiryBtn = document.querySelector('.quote-form button');
+if (inquiryBtn) {
+  inquiryBtn.addEventListener('click', function() {
+    const item = document.querySelector('.quote-form input[type="text"]').value.trim();
+    if (!item) {
+      alert('Please enter what item you need!');
+      return;
+    }
+    // Success message
+    this.textContent = '✓ Inquiry Sent!';
+    this.style.background = '#00B517';
+    setTimeout(() => {
+      this.textContent = 'Send inquiry';
+      this.style.background = '';
+      // Form clear karo
+      document.querySelector('.quote-form input[type="text"]').value = '';
+      document.querySelector('.quote-form textarea').value = '';
+      document.querySelector('.quote-form input[type="number"]').value = '';
+    }, 2000);
+  });
+}
+
+// ===== NEWSLETTER SUBSCRIBE =====
+const subscribeBtn = document.querySelector('.newsletter-form button');
+const subscribeInput = document.querySelector('.newsletter-form input');
+
+if (subscribeBtn) {
+  subscribeBtn.addEventListener('click', function() {
+    const email = subscribeInput.value.trim();
+
+    // Validation
+    if (!email) {
+      alert('Please enter your email address!');
+      return;
+    }
+
+    // Email format check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address!');
+      return;
+    }
+
+    // Success
+    subscribeBtn.textContent = '✓ Subscribed!';
+    subscribeBtn.style.background = '#00B517';
+    subscribeInput.value = '';
+
+    setTimeout(() => {
+      subscribeBtn.textContent = 'Subscribe';
+      subscribeBtn.style.background = '';
+    }, 3000);
+  });
+
+  // Enter key se bhi subscribe ho
+  subscribeInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') subscribeBtn.click();
+  });
+}
