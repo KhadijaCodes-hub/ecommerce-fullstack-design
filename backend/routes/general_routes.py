@@ -58,3 +58,54 @@ async def get_subscribers():
         sub["_id"] = str(sub["_id"])
         subscribers.append(sub)
     return subscribers
+
+# ===== VALID COUPONS =====
+COUPONS = {
+    "SAVE10":  10,
+    "SAVE20":  20,
+    "FLAT50":  50,
+    "WELCOME": 15,
+}
+
+# ===== VALIDATE COUPON =====
+@router.post("/coupon")
+async def validate_coupon(data: dict):
+    code    = data.get("code", "").upper()
+    if code in COUPONS:
+        return {
+            "valid":    True,
+            "discount": COUPONS[code],
+            "message":  f"Coupon applied! ${COUPONS[code]} off"
+        }
+    return {"valid": False, "message": "Invalid coupon code"}
+
+# ===== PLACE ORDER =====
+@router.post("/order")
+async def place_order(order: Order):
+    from datetime import datetime
+    order_data = {
+        "items":      order.items,
+        "subtotal":   order.subtotal,
+        "discount":   order.discount,
+        "tax":        order.tax,
+        "total":      order.total,
+        "coupon":     order.coupon,
+        "user_email": order.user_email,
+        "user_name":  order.user_name,
+        "status":     "pending",
+        "created_at": datetime.utcnow().isoformat()
+    }
+    result = await database["orders"].insert_one(order_data)
+    return {
+        "message":  "Order placed successfully!",
+        "order_id": str(result.inserted_id)
+    }
+
+# ===== GET USER ORDERS =====
+@router.get("/orders/{email}")
+async def get_user_orders(email: str):
+    orders = []
+    async for order in database["orders"].find({"user_email": email}):
+        order["_id"] = str(order["_id"])
+        orders.append(order)
+    return orders

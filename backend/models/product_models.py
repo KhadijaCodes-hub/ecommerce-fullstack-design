@@ -42,3 +42,21 @@ class Inquiry(BaseModel):
 # ===== NEWSLETTER MODEL =====
 class Newsletter(BaseModel):
     email: str    
+
+# ===== ORDER MODEL =====
+class OrderItem(BaseModel):
+    id: str
+    title: str
+    price: float
+    image: str
+    qty: int
+
+class Order(BaseModel):
+    items: list
+    subtotal: float
+    discount: float
+    tax: float
+    total: float
+    coupon: Optional[str] = None
+    user_email: Optional[str] = None
+    user_name: Optional[str] = None    

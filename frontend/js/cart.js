@@ -16,7 +16,7 @@ function saveCart(cart) {
 function calculateTotals() {
   const cart     = getCart();
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  const discount = subtotal > 500 ? 60 : 0;
+  const discount = appliedCouponDiscount > 0 ? appliedCouponDiscount : (subtotal > 500 ? 60 : 0);
   const tax      = parseFloat((subtotal * 0.01).toFixed(2));
   const total    = subtotal - discount + tax;
 
@@ -136,13 +136,32 @@ function moveToSaved(index) {
   renderSavedItems();
 }
 
-// ===== APPLY COUPON =====
-document.querySelector('.apply-coupon-btn').addEventListener('click', function() {
+// ===== COUPON =====
+let appliedCouponDiscount = 0;
+
+document.querySelector('.apply-coupon-btn').addEventListener('click', async function() {
   const code = document.querySelector('.coupon-input input').value.trim().toUpperCase();
-  if (code === 'SAVE10') {
-    alert('Coupon applied! $10 discount added.');
-  } else if (code) {
-    alert(`Coupon "${code}" is invalid.`);
+  if (!code) { alert('Please enter a coupon code!'); return; }
+
+  try {
+    const res  = await fetch('http://127.0.0.1:8000/api/general/coupon', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ code })
+    });
+    const data = await res.json();
+
+    if (data.valid) {
+      appliedCouponDiscount = data.discount;
+      this.textContent       = '✓ Applied!';
+      this.style.color       = '#00B517';
+      alert(data.message);
+      calculateTotals();
+    } else {
+      alert(data.message);
+    }
+  } catch(err) {
+    alert('Error validating coupon!');
   }
 });
 
@@ -203,3 +222,61 @@ function moveSavedToCart(index) {
 // ===== PAGE LOAD =====
 renderCart();
 renderSavedItems();
+
+// ===== CHECKOUT =====
+document.querySelector('.checkout-btn').addEventListener('click', async function() {
+  const cart = getCart();
+  if (cart.length === 0) { alert('Your cart is empty!'); return; }
+
+  const user     = JSON.parse(localStorage.getItem('user') || '{}');
+  const token    = localStorage.getItem('userToken');
+
+  if (!token) {
+    if (confirm('Please login to place order. Go to login page?')) {
+      window.location.href = 'login.html';
+    }
+    return;
+  }
+
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const discount = appliedCouponDiscount > 0 ? appliedCouponDiscount : (subtotal > 500 ? 60 : 0);
+  const tax      = parseFloat((subtotal * 0.01).toFixed(2));
+  const total    = subtotal - discount + tax;
+
+  this.textContent = 'Placing order...';
+  this.disabled    = true;
+
+  try {
+    const res  = await fetch('http://127.0.0.1:8000/api/general/order', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items:      cart,
+        subtotal, discount, tax, total,
+        coupon:     document.querySelector('.coupon-input input').value || null,
+        user_email: user.email || 'guest',
+        user_name:  user.name  || 'Guest'
+      })
+    });
+
+    const data = await res.json();
+
+    // Cart clear karo
+    localStorage.removeItem('cart');
+
+    // Success message
+    this.textContent      = '✓ Order Placed!';
+    this.style.background = '#00B517';
+
+    setTimeout(() => {
+      alert(`🎉 Order placed successfully!\nOrder ID: ${data.order_id}\nThank you for shopping with us!`);
+      window.location.href = 'orders.html';
+    }, 500);
+
+  } catch(err) {
+    alert('Error placing order. Please try again!');
+    this.textContent      = 'Checkout';
+    this.style.background = '';
+    this.disabled         = false;
+  }
+});
