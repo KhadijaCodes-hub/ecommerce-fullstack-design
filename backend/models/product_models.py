@@ -30,3 +30,15 @@ class ProductUpdate(BaseModel):
     rating: Optional[float] = None
     orders: Optional[int] = None
     free_shipping: Optional[bool] = None
+
+# ===== INQUIRY MODEL =====
+class Inquiry(BaseModel):
+    item: str
+    details: Optional[str] = None
+    quantity: Optional[int] = None
+    unit: Optional[str] = "Pcs"
+    user_email: Optional[str] = None
+
+# ===== NEWSLETTER MODEL =====
+class Newsletter(BaseModel):
+    email: str    

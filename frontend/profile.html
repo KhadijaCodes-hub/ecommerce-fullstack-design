@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile - Brand eCommerce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/profile.css"/>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<header class="top-bar">
+  <div class="container">
+    <a href="index.html" class="logo">
+      <img src="assets/images/logo-colored.png" alt="Logo Image">
+    </a>
+    <div class="search-bar">
+      <input type="text" placeholder="Search" id="searchInput"/>
+      <div class="category-dropdown" id="catDropdown" onclick="toggleCatDropdown(event)">
+        <span id="catSelected">All category</span>
+        <i class="fas fa-chevron-down"></i>
+        <div class="cat-dropdown-menu" id="catDropdownMenu">
+          <div class="cat-dropdown-option" onclick="selectCat(this, 'All category')">All category</div>
+          <div class="cat-dropdown-option" onclick="selectCat(this, 'Clothes')">Clothes</div>
+          <div class="cat-dropdown-option" onclick="selectCat(this, 'Electronics')">Electronics</div>
+          <div class="cat-dropdown-option" onclick="selectCat(this, 'Smartphones')">Smartphones</div>
+        </div>
+      </div>
+      <button onclick="searchProducts()">Search</button>
+    </div>
+    <div class="top-actions">
+      <a href="profile.html" class="top-action active-action"><i class="fas fa-user"></i><span>Profile</span></a>
+      <a href="messages.html" class="top-action"><i class="bi bi-chat-left-text-fill"></i><span>Message</span></a>
+      <a href="orders.html" class="top-action"><i class="bi bi-heart-fill"></i><span>Orders</span></a>
+      <a href="cart.html" class="top-action"><i class="fas fa-shopping-cart"></i><span>My cart</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== MAIN NAV ===== -->
+<nav class="main-nav">
+  <div class="container">
+    <ul class="nav-links">
+      <li><a href="products.html"><i class="fas fa-bars"></i> All category</a></li>
+      <li><a href="products.html?category=offers">Hot offers</a></li>
+      <li><a href="#">Gift boxes</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Menu item</a></li>
+      <li class="help-dropdown-wrapper">
+        <a href="#" onclick="toggleHelp(event)">Help <i class="fas fa-chevron-down" id="helpArrow"></i></a>
+        <div class="help-menu" id="helpMenu">
+          <a href="#" class="help-option">Help Center</a>
+          <a href="#" class="help-option">Contact Us</a>
+          <a href="#" class="help-option">FAQs</a>
+        </div>
+      </li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-dropdown" id="langDropdown" onclick="toggleLang()">
+        <span id="langSelected">English, USD</span>
+        <i class="fas fa-chevron-down"></i>
+        <div class="lang-menu" id="langMenu">
+          <div class="lang-option" onclick="selectLang(this, 'English, USD')"><img src="assets/images/usa.png" alt=""> English, USD</div>
+          <div class="lang-option" onclick="selectLang(this, 'Arabic, AED')"><img src="assets/images/arabic-emirates.png" alt=""> Arabic, AED</div>
+        </div>
+      </div>
+      <div class="ship-to" id="shipToDropdown" onclick="toggleShipTo()">
+        <span>Ship to</span>
+        <span class="flag-emoji"><img src="assets/images/flag.png" alt="flag" style="height:16px;width:22px;"></span>
+        <i class="fas fa-chevron-down"></i>
+        <div class="ship-to-menu" id="shipToMenu">
+          <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/flag.png', 'DE')"><img src="assets/images/flag.png" alt=""> Germany</div>
+          <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/usa.png', 'US')"><img src="assets/images/usa.png" alt=""> United States</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="profile-page">
+  <div class="container">
+
+    <div class="profile-layout">
+
+      <!-- LEFT: Sidebar -->
+      <aside class="profile-sidebar">
+        <div class="profile-avatar-section">
+          <div class="profile-avatar" id="profileAvatar">K</div>
+          <h3 id="sidebarName">Loading...</h3>
+          <p id="sidebarEmail">loading@email.com</p>
+        </div>
+        <ul class="profile-menu">
+          <li class="active" onclick="showTab('overview')">
+            <i class="fas fa-home"></i> Overview
+          </li>
+          <li onclick="showTab('edit')">
+            <i class="fas fa-edit"></i> Edit Profile
+          </li>
+          <li onclick="showTab('orders')">
+            <i class="fas fa-box"></i> My Orders
+          </li>
+          <li onclick="showTab('saved')">
+            <i class="fas fa-heart"></i> Saved Items
+          </li>
+          <li onclick="showTab('security')">
+            <i class="fas fa-shield-alt"></i> Security
+          </li>
+          <li class="logout-item" onclick="logoutUser()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </li>
+        </ul>
+      </aside>
+
+      <!-- RIGHT: Content -->
+      <div class="profile-content">
+
+        <!-- Overview Tab -->
+        <div class="profile-tab active" id="tab-overview">
+          <h2>My Profile</h2>
+          <div class="profile-info-card">
+            <div class="info-row">
+              <div class="info-icon"><i class="fas fa-user"></i></div>
+              <div>
+                <p class="info-label">Full Name</p>
+                <p class="info-value" id="infoName">—</p>
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-icon"><i class="fas fa-envelope"></i></div>
+              <div>
+                <p class="info-label">Email Address</p>
+                <p class="info-value" id="infoEmail">—</p>
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-icon"><i class="fas fa-shield-alt"></i></div>
+              <div>
+                <p class="info-label">Account Type</p>
+                <p class="info-value" id="infoRole">—</p>
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-icon"><i class="fas fa-shopping-cart"></i></div>
+              <div>
+                <p class="info-label">Cart Items</p>
+                <p class="info-value" id="infoCart">0 items</p>
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-icon"><i class="fas fa-heart"></i></div>
+              <div>
+                <p class="info-label">Saved Items</p>
+                <p class="info-value" id="infoSaved">0 items</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Profile Tab -->
+        <div class="profile-tab" id="tab-edit">
+          <h2>Edit Profile</h2>
+          <div class="profile-info-card">
+            <div class="edit-form">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="editName" placeholder="Enter your name"/>
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="editEmail" placeholder="Enter your email" disabled/>
+                <small style="color:var(--topbar-gray)">Email cannot be changed</small>
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" id="editPhone" placeholder="Enter your phone"/>
+              </div>
+              <div class="form-group">
+                <label>Address</label>
+                <input type="text" id="editAddress" placeholder="Enter your address"/>
+              </div>
+              <button class="save-profile-btn" onclick="saveProfile()">
+                <i class="fas fa-save"></i> Save Changes
+              </button>
+              <div id="editSuccess" class="edit-success" style="display:none">
+                <i class="fas fa-check-circle"></i> Profile updated successfully!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div class="profile-tab" id="tab-orders">
+          <h2>My Orders</h2>
+          <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h3>No orders yet</h3>
+            <p>You haven't placed any orders yet. Start shopping!</p>
+            <a href="products.html" class="browse-btn">Browse Products</a>
+          </div>
+        </div>
+
+        <!-- Saved Items Tab -->
+        <div class="profile-tab" id="tab-saved">
+          <h2>Saved Items</h2>
+          <div id="savedItemsList" class="saved-items-grid">
+            <!-- JS se load hoga -->
+          </div>
+        </div>
+
+        <!-- Security Tab -->
+        <div class="profile-tab" id="tab-security">
+          <h2>Security</h2>
+          <div class="profile-info-card">
+            <div class="security-info">
+              <div class="security-row">
+                <div>
+                  <p class="security-title">Password</p>
+                  <p class="security-desc">Last changed: Never</p>
+                </div>
+                <button class="change-btn" onclick="alert('Password change feature coming soon!')">Change</button>
+              </div>
+              <div class="security-row">
+                <div>
+                  <p class="security-title">Two-Factor Authentication</p>
+                  <p class="security-desc">Not enabled</p>
+                </div>
+                <button class="change-btn" onclick="alert('2FA feature coming soon!')">Enable</button>
+              </div>
+              <div class="security-row">
+                <div>
+                  <p class="security-title">Active Sessions</p>
+                  <p class="security-desc">1 active session</p>
+                </div>
+                <button class="change-btn danger" onclick="logoutUser()">Logout All</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo"><img src="assets/images/logo-colored.png" alt="Logo"></div>
+        <p>Best information about the company goes here but now lorem ipsum is</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>About</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Find store</a></li><li><a href="#">Categories</a></li><li><a href="#">Blogs</a></li></ul></div>
+      <div class="footer-col"><h4>Partnership</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Find store</a></li><li><a href="#">Categories</a></li><li><a href="#">Blogs</a></li></ul></div>
+      <div class="footer-col"><h4>Information</h4><ul><li><a href="#">Help Center</a></li><li><a href="#">Money Refund</a></li><li><a href="#">Shipping</a></li><li><a href="#">Contact us</a></li></ul></div>
+      <div class="footer-col"><h4>For users</h4><ul><li><a href="login.html">Login</a></li><li><a href="signup.html">Register</a></li><li><a href="#">Settings</a></li><li><a href="orders.html">My Orders</a></li></ul></div>
+      <div class="footer-col"><h4>Get app</h4><div class="app-links"><img src="assets/images/app-store.png" alt="App Store"/><img src="assets/images/google-play.png" alt="Google Play"/></div></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+      <p>&copy; 2023 Ecommerce.</p>
+      <div class="language" id="footerLang" onclick="toggleFooterLang()">
+        <img src="assets/images/usa.png" alt="flag" id="footerFlag">
+        <p id="footerLangText">English</p>
+        <i class="fas fa-chevron-up" id="footerLangArrow"></i>
+        <div class="footer-lang-menu" id="footerLangMenu">
+          <div class="footer-lang-option" onclick="selectFooterLang(this, 'assets/images/usa.png', 'English')"><img src="assets/images/usa.png" alt=""> English</div>
+          <div class="footer-lang-option" onclick="selectFooterLang(this, 'assets/images/arabic-emirates.png', 'Arabic')"><img src="assets/images/arabic-emirates.png" alt=""> Arabic</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/home.js"></script>
+<script>
+// ===== AUTH CHECK =====
+const user  = JSON.parse(localStorage.getItem('user') || '{}');
+const token = localStorage.getItem('userToken');
+
+if (!token) {
+  window.location.href = 'login.html';
+}
+
+// ===== LOAD USER DATA =====
+function loadUserData() {
+  if (!user.name) return;
+
+  // Sidebar
+  document.getElementById('sidebarName').textContent  = user.name;
+  document.getElementById('sidebarEmail').textContent = user.email;
+  document.getElementById('profileAvatar').textContent = user.name.charAt(0).toUpperCase();
+
+  // Overview
+  document.getElementById('infoName').textContent  = user.name;
+  document.getElementById('infoEmail').textContent = user.email;
+  document.getElementById('infoRole').textContent  = user.role === 'admin' ? '👑 Admin' : '👤 Customer';
+
+  // Cart & Saved count
+  const cart  = JSON.parse(localStorage.getItem('cart') || '[]');
+  const saved = JSON.parse(localStorage.getItem('savedItems') || '[]');
+  document.getElementById('infoCart').textContent  = `${cart.length} items`;
+  document.getElementById('infoSaved').textContent = `${saved.length} items`;
+
+  // Edit form prefill
+  document.getElementById('editName').value  = user.name;
+  document.getElementById('editEmail').value = user.email;
+
+  // Load saved items
+  loadSavedItems();
+}
+
+// ===== SHOW TAB =====
+function showTab(name) {
+  document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.profile-menu li').forEach(l => l.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ===== SAVE PROFILE =====
+function saveProfile() {
+  const name    = document.getElementById('editName').value.trim();
+  const phone   = document.getElementById('editPhone').value.trim();
+  const address = document.getElementById('editAddress').value.trim();
+
+  if (!name) { alert('Name cannot be empty!'); return; }
+
+  // Update localStorage
+  user.name = name;
+  user.phone   = phone;
+  user.address = address;
+  localStorage.setItem('user', JSON.stringify(user));
+
+  // Update sidebar
+  document.getElementById('sidebarName').textContent   = name;
+  document.getElementById('profileAvatar').textContent = name.charAt(0).toUpperCase();
+  document.getElementById('infoName').textContent      = name;
+
+  // Success message
+  const msg = document.getElementById('editSuccess');
+  msg.style.display = 'flex';
+  setTimeout(() => msg.style.display = 'none', 3000);
+}
+
+// ===== LOAD SAVED ITEMS =====
+function loadSavedItems() {
+  const saved = JSON.parse(localStorage.getItem('savedItems') || '[]');
+  const grid  = document.getElementById('savedItemsList');
+
+  if (saved.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-heart"></i>
+        <h3>No saved items</h3>
+        <p>Save products you like to find them easily later!</p>
+        <a href="products.html" class="browse-btn">Browse Products</a>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = saved.map((item, i) => `
+    <div class="saved-item-card">
+      <img src="${item.image}" alt="${item.title}"/>
+      <div class="saved-item-info">
+        <p>${item.title}</p>
+        <span>$${item.price.toFixed(2)}</span>
+      </div>
+      <div class="saved-item-actions">
+        <a href="product-detail.html?id=${item.id}" class="view-btn-small">View</a>
+        <button class="remove-saved-btn" onclick="removeSaved(${i})">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== REMOVE SAVED =====
+function removeSaved(index) {
+  const saved = JSON.parse(localStorage.getItem('savedItems') || '[]');
+  saved.splice(index, 1);
+  localStorage.setItem('savedItems', JSON.stringify(saved));
+  loadSavedItems();
+  document.getElementById('infoSaved').textContent = `${saved.length} items`;
+}
+
+// ===== LOGOUT =====
+function logoutUser() {
+  localStorage.removeItem('userToken');
+  localStorage.removeItem('user');
+  localStorage.removeItem('adminToken');
+  localStorage.removeItem('adminUser');
+  window.location.href = 'index.html';
+}
+
+// ===== SEARCH =====
+function searchProducts() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+}
+
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') searchProducts();
+});
+
+// Page load
+loadUserData();
+</script>
+</body>
+</html>

@@ -18,7 +18,7 @@ function selectCat(el, value) {
   document.getElementById('catDropdown').classList.remove('open');
 }
 
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
   const cat = document.getElementById('catDropdown');
   if (cat && !cat.contains(e.target)) {
     cat.classList.remove('open');
@@ -34,7 +34,7 @@ function toggleHelp(e) {
 }
 
 // Bahar click se band ho
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
   const help = document.querySelector('.help-dropdown-wrapper');
   if (help && !help.contains(e.target)) {
     help.classList.remove('open');
@@ -55,7 +55,7 @@ function selectLang(el, value) {
 }
 
 // Bahar click se band ho
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
   const lang = document.getElementById('langDropdown');
   if (lang && !lang.contains(e.target)) {
     lang.classList.remove('open');
@@ -79,7 +79,7 @@ function selectCountry(el, flagSrc, code) {
 }
 
 // Bahar click karne se band ho
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
   const dropdown = document.getElementById('shipToDropdown');
   if (dropdown && !dropdown.contains(e.target)) {
     dropdown.classList.remove('open');
@@ -93,7 +93,7 @@ endTime.setHours(endTime.getHours() + 13);
 endTime.setMinutes(endTime.getMinutes() + 34);
 
 function updateCountdown() {
-  const now  = new Date();
+  const now = new Date();
   const diff = endTime - now;
   if (diff <= 0) return;
 
@@ -102,10 +102,10 @@ function updateCountdown() {
   const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
   const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-  document.getElementById('days').textContent  = String(d).padStart(2, '0');
+  document.getElementById('days').textContent = String(d).padStart(2, '0');
   document.getElementById('hours').textContent = String(h).padStart(2, '0');
-  document.getElementById('mins').textContent  = String(m).padStart(2, '0');
-  document.getElementById('secs').textContent  = String(s).padStart(2, '0');
+  document.getElementById('mins').textContent = String(m).padStart(2, '0');
+  document.getElementById('secs').textContent = String(s).padStart(2, '0');
 }
 
 setInterval(updateCountdown, 1000);
@@ -130,13 +130,13 @@ function toggleFooterLang() {
 }
 
 function selectFooterLang(option, flagSrc, langText) {
-  document.getElementById('footerFlag').src    = flagSrc;
+  document.getElementById('footerFlag').src = flagSrc;
   document.getElementById('footerLangText').textContent = langText;
   document.getElementById('footerLang').classList.remove('open');
   event.stopPropagation();
 }
 
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
   const el = document.getElementById('footerLang');
   if (el && !el.contains(e.target)) {
     el.classList.remove('open');
@@ -175,18 +175,18 @@ async function loadFeaturedProducts() {
 loadFeaturedProducts();
 
 // ===== HOME PAGE SEARCH =====
-const homeSearchBtn   = document.querySelector('.search-bar button');
+const homeSearchBtn = document.querySelector('.search-bar button');
 const homeSearchInput = document.getElementById('searchInput');
 
 if (homeSearchBtn) {
-  homeSearchBtn.addEventListener('click', function() {
+  homeSearchBtn.addEventListener('click', function () {
     const q = homeSearchInput.value.trim();
     if (q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
   });
 }
 
 if (homeSearchInput) {
-  homeSearchInput.addEventListener('keypress', function(e) {
+  homeSearchInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
       const q = this.value.trim();
       if (q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
@@ -197,23 +197,52 @@ if (homeSearchInput) {
 // ===== SEND INQUIRY =====
 const inquiryBtn = document.querySelector('.quote-form button');
 if (inquiryBtn) {
-  inquiryBtn.addEventListener('click', function() {
-    const item = document.querySelector('.quote-form input[type="text"]').value.trim();
+  inquiryBtn.addEventListener('click', async function() {
+    const item     = document.querySelector('.quote-form input[type="text"]').value.trim();
+    const details  = document.querySelector('.quote-form textarea').value.trim();
+    const quantity = document.querySelector('.quote-form input[type="number"]').value;
+    const unit     = document.querySelector('.quote-form select').value;
+    const user     = JSON.parse(localStorage.getItem('user') || '{}');
+
     if (!item) {
       alert('Please enter what item you need!');
       return;
     }
-    // Success message
-    this.textContent = '✓ Inquiry Sent!';
-    this.style.background = '#00B517';
-    setTimeout(() => {
-      this.textContent = 'Send inquiry';
-      this.style.background = '';
-      // Form clear karo
-      document.querySelector('.quote-form input[type="text"]').value = '';
-      document.querySelector('.quote-form textarea').value = '';
-      document.querySelector('.quote-form input[type="number"]').value = '';
-    }, 2000);
+
+    inquiryBtn.textContent = 'Sending...';
+    inquiryBtn.disabled    = true;
+
+    try {
+      await fetch('http://127.0.0.1:8000/api/general/inquiry', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          item,
+          details,
+          quantity:   parseInt(quantity) || 1,
+          unit,
+          user_email: user.email || 'guest'
+        })
+      });
+
+      inquiryBtn.textContent       = '✓ Inquiry Sent!';
+      inquiryBtn.style.background  = '#00B517';
+      inquiryBtn.style.borderColor = '#00B517';
+
+      setTimeout(() => {
+        inquiryBtn.textContent       = 'Send inquiry';
+        inquiryBtn.style.background  = '';
+        inquiryBtn.style.borderColor = '';
+        document.querySelector('.quote-form input[type="text"]').value    = '';
+        document.querySelector('.quote-form textarea').value              = '';
+        document.querySelector('.quote-form input[type="number"]').value  = '';
+      }, 2000);
+
+    } catch(err) {
+      alert('Something went wrong. Please try again!');
+    } finally {
+      inquiryBtn.disabled = false;
+    }
   });
 }
 
@@ -222,7 +251,7 @@ const subscribeBtn = document.querySelector('.newsletter-form button');
 const subscribeInput = document.querySelector('.newsletter-form input');
 
 if (subscribeBtn) {
-  subscribeBtn.addEventListener('click', function() {
+  subscribeBtn.addEventListener('click', function () {
     const email = subscribeInput.value.trim();
 
     // Validation
@@ -238,10 +267,20 @@ if (subscribeBtn) {
       return;
     }
 
-    // Success
-    subscribeBtn.textContent = '✓ Subscribed!';
-    subscribeBtn.style.background = '#00B517';
-    subscribeInput.value = '';
+    // Backend pe save karo
+    fetch('http://127.0.0.1:8000/api/general/newsletter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(res => res.json()).then(data => {
+      subscribeBtn.textContent = '✓ Subscribed!';
+      subscribeBtn.style.background = '#00B517';
+      subscribeInput.value = '';
+      setTimeout(() => {
+        subscribeBtn.textContent = 'Subscribe';
+        subscribeBtn.style.background = '';
+      }, 3000);
+    });
 
     setTimeout(() => {
       subscribeBtn.textContent = 'Subscribe';
@@ -250,7 +289,39 @@ if (subscribeBtn) {
   });
 
   // Enter key se bhi subscribe ho
-  subscribeInput.addEventListener('keypress', function(e) {
+  subscribeInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') subscribeBtn.click();
   });
 }
+
+// ===== USER STATE =====
+function updateUserState() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const token = localStorage.getItem('userToken');
+
+  const userCard = document.querySelector('.user-card');
+  if (!userCard) return;
+
+  if (token && user.name) {
+    // Logged in
+    userCard.innerHTML = `
+      <div class="user">
+        <img src="assets/images/Avatar.png" alt="">
+        <p>Hi, ${user.name}<br><small style="color:var(--search-button)">Welcome back!</small></p>
+      </div>
+      ${user.role === 'admin' ? `<a href="admin.html" class="btn-join">Admin Panel</a>` : ''}
+      <button onclick="logoutUser()" class="btn-login">Log out</button>
+    `;
+  }
+}
+
+function logoutUser() {
+  localStorage.removeItem('userToken');
+  localStorage.removeItem('user');
+  localStorage.removeItem('adminToken');
+  localStorage.removeItem('adminUser');
+  window.location.reload();
+}
+
+// Page load pe call karo
+updateUserState();

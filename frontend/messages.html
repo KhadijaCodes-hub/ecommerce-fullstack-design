@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Messages - Brand eCommerce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/messages.css"/>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<header class="top-bar">
+  <div class="container">
+    <a href="index.html" class="logo">
+      <img src="assets/images/logo-colored.png" alt="Logo Image">
+    </a>
+    <div class="search-bar">
+      <input type="text" placeholder="Search" id="searchInput"/>
+      <div class="category-dropdown" id="catDropdown" onclick="toggleCatDropdown(event)">
+        <span id="catSelected">All category</span>
+        <i class="fas fa-chevron-down"></i>
+        <div class="cat-dropdown-menu" id="catDropdownMenu">
+          <div class="cat-dropdown-option" onclick="selectCat(this, 'All category')">All category</div>
+          <div class="cat-dropdown-option" onclick="selectCat(this, 'Clothes')">Clothes</div>
+          <div class="cat-dropdown-option" onclick="selectCat(this, 'Electronics')">Electronics</div>
+        </div>
+      </div>
+      <button onclick="searchProducts()">Search</button>
+    </div>
+    <div class="top-actions">
+      <a href="profile.html" class="top-action"><i class="fas fa-user"></i><span>Profile</span></a>
+      <a href="messages.html" class="top-action active-action"><i class="bi bi-chat-left-text-fill"></i><span>Message</span></a>
+      <a href="orders.html" class="top-action"><i class="bi bi-heart-fill"></i><span>Orders</span></a>
+      <a href="cart.html" class="top-action"><i class="fas fa-shopping-cart"></i><span>My cart</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== MAIN NAV ===== -->
+<nav class="main-nav">
+  <div class="container">
+    <ul class="nav-links">
+      <li><a href="products.html"><i class="fas fa-bars"></i> All category</a></li>
+      <li><a href="products.html?category=offers">Hot offers</a></li>
+      <li><a href="#">Gift boxes</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Menu item</a></li>
+      <li class="help-dropdown-wrapper">
+        <a href="#" onclick="toggleHelp(event)">Help <i class="fas fa-chevron-down" id="helpArrow"></i></a>
+        <div class="help-menu" id="helpMenu">
+          <a href="#" class="help-option">Help Center</a>
+          <a href="#" class="help-option">Contact Us</a>
+          <a href="#" class="help-option">FAQs</a>
+        </div>
+      </li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-dropdown" id="langDropdown" onclick="toggleLang()">
+        <span id="langSelected">English, USD</span>
+        <i class="fas fa-chevron-down"></i>
+        <div class="lang-menu" id="langMenu">
+          <div class="lang-option" onclick="selectLang(this, 'English, USD')"><img src="assets/images/usa.png" alt=""> English, USD</div>
+          <div class="lang-option" onclick="selectLang(this, 'Arabic, AED')"><img src="assets/images/arabic-emirates.png" alt=""> Arabic, AED</div>
+        </div>
+      </div>
+      <div class="ship-to" id="shipToDropdown" onclick="toggleShipTo()">
+        <span>Ship to</span>
+        <span class="flag-emoji"><img src="assets/images/flag.png" alt="flag" style="height:16px;width:22px;"></span>
+        <i class="fas fa-chevron-down"></i>
+        <div class="ship-to-menu" id="shipToMenu">
+          <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/flag.png', 'DE')"><img src="assets/images/flag.png" alt=""> Germany</div>
+          <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/usa.png', 'US')"><img src="assets/images/usa.png" alt=""> United States</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="messages-page">
+  <div class="container">
+
+    <div class="messages-layout">
+
+      <!-- LEFT: Conversations List -->
+      <aside class="conversations-panel">
+        <div class="conv-header">
+          <h3>Messages</h3>
+          <span class="msg-badge">0</span>
+        </div>
+
+        <!-- Search -->
+        <div class="conv-search">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search messages..."/>
+        </div>
+
+        <!-- Tabs -->
+        <div class="conv-tabs">
+          <button class="conv-tab active">All</button>
+          <button class="conv-tab">Unread</button>
+          <button class="conv-tab">Suppliers</button>
+        </div>
+
+        <!-- Empty Conversations -->
+        <div class="conv-empty">
+          <i class="bi bi-chat-left-text"></i>
+          <p>No conversations yet</p>
+          <small>Your messages with suppliers will appear here</small>
+        </div>
+      </aside>
+
+      <!-- RIGHT: Chat Area -->
+      <div class="chat-panel">
+
+        <!-- Default — no chat selected -->
+        <div class="chat-empty" id="chatEmpty">
+          <div class="chat-empty-content">
+            <div class="chat-empty-icon">
+              <i class="bi bi-chat-left-text"></i>
+            </div>
+            <h3>Your Messages</h3>
+            <p>Send inquiries to suppliers and manage your conversations here.</p>
+            <p>Click <strong>"Send inquiry"</strong> on any product page to start a conversation.</p>
+            <a href="products.html" class="browse-products-btn">
+              <i class="fas fa-shopping-bag"></i> Browse Products
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <div class="how-it-works">
+      <h3>How Messaging Works</h3>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-icon"><i class="fas fa-search"></i></div>
+          <h4>Find a Product</h4>
+          <p>Browse our products and find what you're looking for</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-icon"><i class="fas fa-paper-plane"></i></div>
+          <h4>Send Inquiry</h4>
+          <p>Click "Send inquiry" on the product page to contact the supplier</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-icon"><i class="bi bi-chat-left-text"></i></div>
+          <h4>Get Response</h4>
+          <p>Supplier will respond to your inquiry here in Messages</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <div class="step-icon"><i class="fas fa-handshake"></i></div>
+          <h4>Place Order</h4>
+          <p>Agree on terms and place your order confidently</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo"><img src="assets/images/logo-colored.png" alt="Logo"></div>
+        <p>Best information about the company goes here but now lorem ipsum is</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>About</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Find store</a></li><li><a href="#">Categories</a></li><li><a href="#">Blogs</a></li></ul></div>
+      <div class="footer-col"><h4>Information</h4><ul><li><a href="#">Help Center</a></li><li><a href="#">Money Refund</a></li><li><a href="#">Shipping</a></li><li><a href="#">Contact us</a></li></ul></div>
+      <div class="footer-col"><h4>For users</h4><ul><li><a href="login.html">Login</a></li><li><a href="signup.html">Register</a></li><li><a href="profile.html">Profile</a></li><li><a href="orders.html">My Orders</a></li></ul></div>
+      <div class="footer-col"><h4>Get app</h4><div class="app-links"><img src="assets/images/app-store.png" alt="App Store"/><img src="assets/images/google-play.png" alt="Google Play"/></div></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+      <p>&copy; 2023 Ecommerce.</p>
+      <div class="language" id="footerLang" onclick="toggleFooterLang()">
+        <img src="assets/images/usa.png" alt="flag" id="footerFlag">
+        <p id="footerLangText">English</p>
+        <i class="fas fa-chevron-up" id="footerLangArrow"></i>
+        <div class="footer-lang-menu" id="footerLangMenu">
+          <div class="footer-lang-option" onclick="selectFooterLang(this, 'assets/images/usa.png', 'English')"><img src="assets/images/usa.png" alt=""> English</div>
+          <div class="footer-lang-option" onclick="selectFooterLang(this, 'assets/images/arabic-emirates.png', 'Arabic')"><img src="assets/images/arabic-emirates.png" alt=""> Arabic</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/home.js"></script>
+<script>
+// ===== AUTH CHECK =====
+const token = localStorage.getItem('userToken');
+if (!token) window.location.href = 'login.html';
+
+// ===== CONV TABS =====
+document.querySelectorAll('.conv-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.conv-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// ===== SEARCH =====
+function searchProducts() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+}
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') searchProducts();
+});
+</script>
+</body>
+</html>

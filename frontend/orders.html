@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Orders - Brand eCommerce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/orders.css"/>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<header class="top-bar">
+  <div class="container">
+    <a href="index.html" class="logo">
+      <img src="assets/images/logo-colored.png" alt="Logo Image">
+    </a>
+    <div class="search-bar">
+      <input type="text" placeholder="Search" id="searchInput"/>
+      <div class="category-dropdown" id="catDropdown" onclick="toggleCatDropdown(event)">
+        <span id="catSelected">All category</span>
+        <i class="fas fa-chevron-down"></i>
+        <div class="cat-dropdown-menu" id="catDropdownMenu">
+          <div class="cat-dropdown-option" onclick="selectCat(this, 'All category')">All category</div>
+          <div class="cat-dropdown-option" onclick="selectCat(this, 'Clothes')">Clothes</div>
+          <div class="cat-dropdown-option" onclick="selectCat(this, 'Electronics')">Electronics</div>
+        </div>
+      </div>
+      <button onclick="searchProducts()">Search</button>
+    </div>
+    <div class="top-actions">
+      <a href="profile.html" class="top-action"><i class="fas fa-user"></i><span>Profile</span></a>
+      <a href="messages.html" class="top-action"><i class="bi bi-chat-left-text-fill"></i><span>Message</span></a>
+      <a href="orders.html" class="top-action active-action"><i class="bi bi-heart-fill"></i><span>Orders</span></a>
+      <a href="cart.html" class="top-action"><i class="fas fa-shopping-cart"></i><span>My cart</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== MAIN NAV ===== -->
+<nav class="main-nav">
+  <div class="container">
+    <ul class="nav-links">
+      <li><a href="products.html"><i class="fas fa-bars"></i> All category</a></li>
+      <li><a href="products.html?category=offers">Hot offers</a></li>
+      <li><a href="#">Gift boxes</a></li>
+      <li><a href="#">Projects</a></li>
+      <li><a href="#">Menu item</a></li>
+      <li class="help-dropdown-wrapper">
+        <a href="#" onclick="toggleHelp(event)">Help <i class="fas fa-chevron-down" id="helpArrow"></i></a>
+        <div class="help-menu" id="helpMenu">
+          <a href="#" class="help-option">Help Center</a>
+          <a href="#" class="help-option">Contact Us</a>
+          <a href="#" class="help-option">FAQs</a>
+        </div>
+      </li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-dropdown" id="langDropdown" onclick="toggleLang()">
+        <span id="langSelected">English, USD</span>
+        <i class="fas fa-chevron-down"></i>
+        <div class="lang-menu" id="langMenu">
+          <div class="lang-option" onclick="selectLang(this, 'English, USD')"><img src="assets/images/usa.png" alt=""> English, USD</div>
+          <div class="lang-option" onclick="selectLang(this, 'Arabic, AED')"><img src="assets/images/arabic-emirates.png" alt=""> Arabic, AED</div>
+        </div>
+      </div>
+      <div class="ship-to" id="shipToDropdown" onclick="toggleShipTo()">
+        <span>Ship to</span>
+        <span class="flag-emoji"><img src="assets/images/flag.png" alt="flag" style="height:16px;width:22px;"></span>
+        <i class="fas fa-chevron-down"></i>
+        <div class="ship-to-menu" id="shipToMenu">
+          <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/flag.png', 'DE')"><img src="assets/images/flag.png" alt=""> Germany</div>
+          <div class="ship-to-option" onclick="selectCountry(this, 'assets/images/usa.png', 'US')"><img src="assets/images/usa.png" alt=""> United States</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="orders-page">
+  <div class="container">
+
+    <!-- Page Header -->
+    <div class="orders-header">
+      <h2>My Orders</h2>
+      <p>Track and manage your orders</p>
+    </div>
+
+    <!-- Order Stats -->
+    <div class="order-stats">
+      <div class="order-stat-card">
+        <i class="fas fa-shopping-bag"></i>
+        <p class="stat-num">0</p>
+        <p class="stat-label">Total Orders</p>
+      </div>
+      <div class="order-stat-card">
+        <i class="fas fa-clock"></i>
+        <p class="stat-num">0</p>
+        <p class="stat-label">Pending</p>
+      </div>
+      <div class="order-stat-card">
+        <i class="fas fa-truck"></i>
+        <p class="stat-num">0</p>
+        <p class="stat-label">Shipped</p>
+      </div>
+      <div class="order-stat-card">
+        <i class="fas fa-check-circle"></i>
+        <p class="stat-num">0</p>
+        <p class="stat-label">Delivered</p>
+      </div>
+    </div>
+
+    <!-- Orders Content -->
+    <div class="orders-card">
+      <!-- Tabs -->
+      <div class="orders-tabs">
+        <button class="order-tab active">All Orders</button>
+        <button class="order-tab">Pending</button>
+        <button class="order-tab">Shipped</button>
+        <button class="order-tab">Delivered</button>
+        <button class="order-tab">Cancelled</button>
+      </div>
+
+      <!-- Empty State -->
+      <div class="orders-empty">
+        <div class="empty-icon">
+          <i class="fas fa-box-open"></i>
+        </div>
+        <h3>No orders yet</h3>
+        <p>You haven't placed any orders yet.</p>
+        <p>Start shopping and your orders will appear here.</p>
+        <a href="products.html" class="shop-now-link">
+          <i class="fas fa-shopping-cart"></i> Start Shopping
+        </a>
+      </div>
+    </div>
+
+    <!-- Recently Viewed / Suggestions -->
+    <div class="orders-suggestion">
+      <h3>You might also like</h3>
+      <div class="suggestion-grid" id="suggestionGrid">
+        <!-- JS se load hoga -->
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo"><img src="assets/images/logo-colored.png" alt="Logo"></div>
+        <p>Best information about the company goes here but now lorem ipsum is</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>About</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Find store</a></li><li><a href="#">Categories</a></li><li><a href="#">Blogs</a></li></ul></div>
+      <div class="footer-col"><h4>Information</h4><ul><li><a href="#">Help Center</a></li><li><a href="#">Money Refund</a></li><li><a href="#">Shipping</a></li><li><a href="#">Contact us</a></li></ul></div>
+      <div class="footer-col"><h4>For users</h4><ul><li><a href="login.html">Login</a></li><li><a href="signup.html">Register</a></li><li><a href="profile.html">Profile</a></li><li><a href="orders.html">My Orders</a></li></ul></div>
+      <div class="footer-col"><h4>Get app</h4><div class="app-links"><img src="assets/images/app-store.png" alt="App Store"/><img src="assets/images/google-play.png" alt="Google Play"/></div></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;">
+      <p>&copy; 2023 Ecommerce.</p>
+      <div class="language" id="footerLang" onclick="toggleFooterLang()">
+        <img src="assets/images/usa.png" alt="flag" id="footerFlag">
+        <p id="footerLangText">English</p>
+        <i class="fas fa-chevron-up" id="footerLangArrow"></i>
+        <div class="footer-lang-menu" id="footerLangMenu">
+          <div class="footer-lang-option" onclick="selectFooterLang(this, 'assets/images/usa.png', 'English')"><img src="assets/images/usa.png" alt=""> English</div>
+          <div class="footer-lang-option" onclick="selectFooterLang(this, 'assets/images/arabic-emirates.png', 'Arabic')"><img src="assets/images/arabic-emirates.png" alt=""> Arabic</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/home.js"></script>
+<script>
+// ===== AUTH CHECK =====
+const token = localStorage.getItem('userToken');
+if (!token) window.location.href = 'login.html';
+
+// ===== TABS =====
+document.querySelectorAll('.order-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.order-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// ===== LOAD SUGGESTIONS =====
+async function loadSuggestions() {
+  try {
+    const products = await getProducts({});
+    const grid     = document.getElementById('suggestionGrid');
+    const items    = products.slice(0, 4);
+    grid.innerHTML = items.map(p => `
+      <a href="product-detail.html?id=${p.id}" class="suggestion-card">
+        <img src="${p.image}" alt="${p.name}"/>
+        <p>${p.name}</p>
+        <span>$${p.price.toFixed(2)}</span>
+      </a>
+    `).join('');
+  } catch(err) { console.log('Suggestions load nahi hue'); }
+}
+
+// ===== SEARCH =====
+function searchProducts() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+}
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') searchProducts();
+});
+
+loadSuggestions();
+</script>
+</body>
+</html>
