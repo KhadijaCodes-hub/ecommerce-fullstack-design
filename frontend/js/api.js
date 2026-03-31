@@ -3,8 +3,7 @@
 //  ecommerce-fullstack-design
 // =============================================
 
-const API_URL = 'http://127.0.0.1:8000/api';
-
+const API_URL = "https://ecommerce-fullstack-design-production-55d2.up.railway.app";
 // ===== GET ALL PRODUCTS =====
 async function getProducts(filters = {}) {
   let url = `${API_URL}/products/?`;

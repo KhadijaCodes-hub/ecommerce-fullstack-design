@@ -167,7 +167,7 @@ async function loadFeaturedProducts() {
     });
 
   } catch (err) {
-    console.error('Products load nahi hue:', err);
+    console.error('Products did not load:', err);
   }
 }
 
