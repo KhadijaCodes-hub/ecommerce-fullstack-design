@@ -3,7 +3,6 @@
 //  ecommerce-fullstack-design
 // =============================================
 
-const API_URL = "https://ecommerce-fullstack-design-production-55d2.up.railway.app";
 // ===== CATEGORY DROPDOWN =====
 function toggleCatDropdown(e) {
   e.stopPropagation();
