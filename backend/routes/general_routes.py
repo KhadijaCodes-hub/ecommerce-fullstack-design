@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import APIRouter
 from database import database
-from models.product_models import Inquiry, Newsletter
+from models.product_models import Inquiry, Newsletter,Order,OrderItem
 from datetime import datetime
 
 router = APIRouter()
