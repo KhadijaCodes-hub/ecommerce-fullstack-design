@@ -3,11 +3,10 @@
 //  ecommerce-fullstack-design
 // =============================================
 
-const API_URL = "https://ecommerce-fullstack-design-production-55d2.up.railway.app";
-
+const API_URL = "http://localhost:8000";
 // ===== GET ALL PRODUCTS =====
 async function getProducts(filters = {}) {
-  let url = `${API_URL}/api/products/?`;
+  let url = `${API_URL}/products/?`;
   if (filters.category)     url += `category=${filters.category}&`;
   if (filters.search)       url += `search=${filters.search}&`;
   if (filters.brand)        url += `brand=${filters.brand}&`;
@@ -24,14 +23,14 @@ async function getProducts(filters = {}) {
 
 // ===== GET SINGLE PRODUCT =====
 async function getProduct(id) {
-  const res  = await fetch(`${API_URL}/api/products/${id}`);
+  const res  = await fetch(`${API_URL}/products/${id}`);
   const data = await res.json();
   return data;
 }
 
 // ===== CREATE PRODUCT =====
 async function createProduct(product) {
-  const res = await fetch(`${API_URL}/api/products/`, {
+  const res = await fetch(`${API_URL}/products/`, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body:    JSON.stringify(product)
@@ -41,7 +40,7 @@ async function createProduct(product) {
 
 // ===== UPDATE PRODUCT =====
 async function updateProduct(id, product) {
-  const res = await fetch(`${API_URL}/api/products/${id}`, {
+  const res = await fetch(`${API_URL}/products/${id}`, {
     method:  'PUT',
     headers: { 'Content-Type': 'application/json' },
     body:    JSON.stringify(product)
@@ -51,7 +50,7 @@ async function updateProduct(id, product) {
 
 // ===== DELETE PRODUCT =====
 async function deleteProduct(id) {
-  const res = await fetch(`${API_URL}/api/products/${id}`, {
+  const res = await fetch(`${API_URL}/products/${id}`, {
     method: 'DELETE'
   });
   return await res.json();

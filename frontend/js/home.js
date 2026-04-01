@@ -102,16 +102,10 @@ function updateCountdown() {
   const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
   const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-  // ✅ Check karo ke elements exist karte hain
-  const daysEl = document.getElementById('days');
-  const hoursEl = document.getElementById('hours');
-  const minsEl = document.getElementById('mins');
-  const secsEl = document.getElementById('secs');
-  
-  if (daysEl) daysEl.textContent = String(d).padStart(2, '0');
-  if (hoursEl) hoursEl.textContent = String(h).padStart(2, '0');
-  if (minsEl) minsEl.textContent = String(m).padStart(2, '0');
-  if (secsEl) secsEl.textContent = String(s).padStart(2, '0');
+  document.getElementById('days').textContent = String(d).padStart(2, '0');
+  document.getElementById('hours').textContent = String(h).padStart(2, '0');
+  document.getElementById('mins').textContent = String(m).padStart(2, '0');
+  document.getElementById('secs').textContent = String(s).padStart(2, '0');
 }
 
 setInterval(updateCountdown, 1000);
@@ -219,7 +213,7 @@ if (inquiryBtn) {
     inquiryBtn.disabled    = true;
 
     try {
-      await fetch('${API_URL}/api/general/inquiry', {
+      await fetch('http://127.0.0.1:8000/api/general/inquiry', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -274,7 +268,7 @@ if (subscribeBtn) {
     }
 
     // Backend pe save karo
-    fetch('${API_URL}/api/general/newsletter', {
+    fetch('http://127.0.0.1:8000/api/general/newsletter', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email })
