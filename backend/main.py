@@ -7,7 +7,7 @@ from models.product_models import Product,ProductUpdate
 
 app = FastAPI(title="eCommerce API")
 
-# CORS — frontend se connect karne ke liye
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,4 +24,4 @@ app.include_router(general_router, prefix="/api/general", tags=["General"])
 
 @app.get("/")
 async def root():
-    return {"message": "eCommerce API is running!"}
+    return {"message": "eCommerce API is running!"} 
