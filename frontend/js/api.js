@@ -3,7 +3,8 @@
 //  ecommerce-fullstack-design
 // =============================================
 
-const API_URL = "http://localhost:8000";
+const API_URL = 'http://127.0.0.1:8000/api';
+
 // ===== GET ALL PRODUCTS =====
 async function getProducts(filters = {}) {
   let url = `${API_URL}/products/?`;

@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes.products import router as products_router
 from routes.auth_routes import router as auth_router
 from routes.general_routes import router as general_router
-from models.product_models import Product,ProductUpdate
+from models.product_models import Product,ProductUpdate,OrderItem,Order
 
 app = FastAPI(title="eCommerce API")
 
