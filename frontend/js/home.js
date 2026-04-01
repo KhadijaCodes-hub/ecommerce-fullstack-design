@@ -102,10 +102,16 @@ function updateCountdown() {
   const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
   const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-  document.getElementById('days').textContent = String(d).padStart(2, '0');
-  document.getElementById('hours').textContent = String(h).padStart(2, '0');
-  document.getElementById('mins').textContent = String(m).padStart(2, '0');
-  document.getElementById('secs').textContent = String(s).padStart(2, '0');
+  // ✅ Check karo ke elements exist karte hain
+  const daysEl = document.getElementById('days');
+  const hoursEl = document.getElementById('hours');
+  const minsEl = document.getElementById('mins');
+  const secsEl = document.getElementById('secs');
+  
+  if (daysEl) daysEl.textContent = String(d).padStart(2, '0');
+  if (hoursEl) hoursEl.textContent = String(h).padStart(2, '0');
+  if (minsEl) minsEl.textContent = String(m).padStart(2, '0');
+  if (secsEl) secsEl.textContent = String(s).padStart(2, '0');
 }
 
 setInterval(updateCountdown, 1000);

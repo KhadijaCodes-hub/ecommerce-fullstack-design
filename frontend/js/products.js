@@ -194,10 +194,25 @@ async function loadProducts(filters = {}) {
         <p style="margin-top:10px;color:var(--topbar-gray)">Loading...</p>
       </div>`;
 
-    const products = await getProducts(filters);
+    const response = await getProducts(filters);
+    
+    // ✅ Handle different response structures
+    let products = [];
+    if (Array.isArray(response)) {
+      products = response;
+    } else if (response && Array.isArray(response.products)) {
+      products = response.products;
+    } else if (response && Array.isArray(response.data)) {
+      products = response.data;
+    } else if (response && typeof response === 'object') {
+      // Agar object hai to console mein dekh lo kya aa raha hai
+      console.log('Response structure:', response);
+      products = [];
+    }
+    
     list.innerHTML = '';
 
-    if (products.length === 0) {
+    if (!products || products.length === 0) {
       list.innerHTML = `
         <div style="padding:60px 40px;text-align:center;width:100%;grid-column:1/-1">
           <i class="fas fa-search" style="font-size:48px;color:var(--deal-border)"></i>
@@ -208,7 +223,8 @@ async function loadProducts(filters = {}) {
             Clear all filters
           </button>
         </div>`;
-      document.getElementById('itemCount').textContent = '0';
+      const itemCountEl = document.getElementById('itemCount');
+      if (itemCountEl) itemCountEl.textContent = '0';
       return;
     }
 
@@ -217,44 +233,63 @@ async function loadProducts(filters = {}) {
       card.className = 'product-card';
       card.innerHTML = `
         <div class="product-img">
-          <img src="${product.image}" alt="${product.name}"/>
+          <img src="${product.image || 'assets/images/placeholder.jpg'}" alt="${product.name || 'Product'}"/>
         </div>
         <div class="product-info">
-          <h3 class="product-title">${product.name}</h3>
+          <h3 class="product-title">${product.name || 'Untitled'}</h3>
           <div class="product-price">
-            <span class="current-price">$${product.price.toFixed(2)}</span>
+            <span class="current-price">$${(product.price || 0).toFixed(2)}</span>
             ${product.old_price ? `<span class="old-price">$${product.old_price.toFixed(2)}</span>` : ''}
           </div>
           <div class="product-meta">
             <span class="stars-small"><img src="assets/images/star4.png" alt=""/></span>
-            <span class="rating-num">${product.rating}</span>
+            <span class="rating-num">${product.rating || '4.5'}</span>
             <span class="dot">•</span>
-            <span class="orders">${product.orders} orders</span>
+            <span class="orders">${product.orders || 0} orders</span>
             <span class="dot">•</span>
             ${product.free_shipping ? '<span class="free-shipping">Free Shipping</span>' : ''}
           </div>
-          <p class="product-desc">${product.description}</p>
+          <p class="product-desc">${product.description || ''}</p>
           <a href="product-detail.html?id=${product.id}" class="view-details">View details</a>
         </div>
         <button class="wishlist-btn"><i class="far fa-heart"></i></button>
       `;
 
-      card.querySelector('.wishlist-btn').addEventListener('click', function () {
-        this.classList.toggle('active');
-        const icon = this.querySelector('i');
-        icon.classList.toggle('far');
-        icon.classList.toggle('fas');
-      });
+      const wishlistBtn = card.querySelector('.wishlist-btn');
+      if (wishlistBtn) {
+        wishlistBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          this.classList.toggle('active');
+          const icon = this.querySelector('i');
+          if (icon) {
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+          }
+        });
+      }
 
       list.appendChild(card);
     });
 
-    document.getElementById('itemCount').textContent = products.length.toLocaleString();
+    const itemCountEl = document.getElementById('itemCount');
+    if (itemCountEl) {
+      itemCountEl.textContent = products.length.toLocaleString();
+    }
 
   } catch (err) {
     console.error('Products load nahi hue:', err);
-    document.getElementById('productList').innerHTML = `
-      <p style="padding:20px;color:red">Error: Products load nahi hue. Backend check karo!</p>`;
+    const list = document.getElementById('productList');
+    if (list) {
+      list.innerHTML = `
+        <div style="padding:60px 40px;text-align:center;width:100%;grid-column:1/-1">
+          <i class="fas fa-exclamation-triangle" style="font-size:48px;color:#ff6b6b"></i>
+          <h3 style="margin-top:16px;font-size:20px;font-weight:600;">Error Loading Products</h3>
+          <p style="margin-top:8px;color:var(--topbar-gray);">${err.message || 'Something went wrong'}</p>
+          <button onclick="location.reload()" style="margin-top:20px;background:var(--search-button);color:white;padding:10px 24px;border-radius:6px;cursor:pointer;border:none;">
+            Try Again
+          </button>
+        </div>`;
+    }
   }
 }
 
