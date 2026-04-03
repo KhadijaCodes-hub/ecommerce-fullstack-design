@@ -60,5 +60,3 @@ class Order(BaseModel):
     coupon: Optional[str] = None
     user_email: Optional[str] = None
     user_name: Optional[str] = None    
-
-    

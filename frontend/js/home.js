@@ -143,17 +143,33 @@ document.addEventListener('click', function (e) {
   }
 });
 
+// ===== HOME PAGE SEARCH =====
+const homeSearchBtn   = document.querySelector('.search-bar button');
+const homeSearchInput = document.getElementById('searchInput');
+
+if (homeSearchBtn) {
+  homeSearchBtn.addEventListener('click', function() {
+    const q = homeSearchInput.value.trim();
+    if (q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+  });
+}
+
+if (homeSearchInput) {
+  homeSearchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      const q = this.value.trim();
+      if (q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
+    }
+  });
+}
+
 // ===== FETCH FEATURED PRODUCTS =====
 async function loadFeaturedProducts() {
   try {
-    const products = await getProducts();
+    const products = await getProducts({});
     const grid = document.querySelector('.rec-grid');
     if (!grid) return;
-
-    // Grid clear karo
     grid.innerHTML = '';
-
-    // Products render karo
     products.forEach(product => {
       const card = document.createElement('a');
       card.href = `product-detail.html?id=${product.id}`;
@@ -165,34 +181,41 @@ async function loadFeaturedProducts() {
       `;
       grid.appendChild(card);
     });
-
   } catch (err) {
-    console.error('Products did not load:', err);
+    console.error('Products load nahi hue:', err);
   }
 }
 
-// Page load hone pe call karo
 loadFeaturedProducts();
 
-// ===== HOME PAGE SEARCH =====
-const homeSearchBtn = document.querySelector('.search-bar button');
-const homeSearchInput = document.getElementById('searchInput');
-
-if (homeSearchBtn) {
-  homeSearchBtn.addEventListener('click', function () {
-    const q = homeSearchInput.value.trim();
-    if (q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
-  });
+// ===== USER STATE =====
+function updateUserState() {
+  const user  = JSON.parse(localStorage.getItem('user') || '{}');
+  const token = localStorage.getItem('userToken');
+  const userCard = document.querySelector('.user-card');
+  if (!userCard) return;
+  if (token && user.name) {
+    userCard.innerHTML = `
+      <div class="user">
+        <img src="assets/images/Avatar.png" alt="">
+        <p>Hi, ${user.name}<br><small style="color:var(--search-button)">Welcome back!</small></p>
+      </div>
+      ${user.role === 'admin' ? `<a href="admin.html" class="btn-join">Admin Panel</a>` : ''}
+      <button onclick="logoutUser()" class="btn-login">Log out</button>
+    `;
+  }
 }
 
-if (homeSearchInput) {
-  homeSearchInput.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-      const q = this.value.trim();
-      if (q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
-    }
-  });
+function logoutUser() {
+  localStorage.removeItem('userToken');
+  localStorage.removeItem('user');
+  localStorage.removeItem('adminToken');
+  localStorage.removeItem('adminUser');
+  window.location.reload();
 }
+
+updateUserState();
+
 
 // ===== SEND INQUIRY =====
 const inquiryBtn = document.querySelector('.quote-form button');
@@ -294,26 +317,6 @@ if (subscribeBtn) {
   });
 }
 
-// ===== USER STATE =====
-function updateUserState() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const token = localStorage.getItem('userToken');
-
-  const userCard = document.querySelector('.user-card');
-  if (!userCard) return;
-
-  if (token && user.name) {
-    // Logged in
-    userCard.innerHTML = `
-      <div class="user">
-        <img src="assets/images/Avatar.png" alt="">
-        <p>Hi, ${user.name}<br><small style="color:var(--search-button)">Welcome back!</small></p>
-      </div>
-      ${user.role === 'admin' ? `<a href="admin.html" class="btn-join">Admin Panel</a>` : ''}
-      <button onclick="logoutUser()" class="btn-login">Log out</button>
-    `;
-  }
-}
 
 function logoutUser() {
   localStorage.removeItem('userToken');

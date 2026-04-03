@@ -29,34 +29,18 @@ function getProductIdFromURL() {
 // ===== LOAD PRODUCT DETAIL =====
 async function loadProductDetail() {
   const id = getProductIdFromURL();
-
-  if (!id) {
-    console.log('No id in URL — static data show ho raha hai');
-    return;
-  }
+  if (!id) return;
 
   try {
     const product = await getProduct(id);
     if (!product) return;
 
-    // Title
     document.querySelector('.detail-title').textContent = product.name;
-
-    // In stock
-    document.querySelector('.in-stock').innerHTML = `
-      <i class="fas fa-check-circle"></i> In stock
-    `;
-
-    // Rating
+    document.querySelector('.in-stock').innerHTML = `<i class="fas fa-check-circle"></i> In stock`;
     document.querySelector('.rating-val').textContent = product.rating;
-    document.querySelector('.reviews').innerHTML = `
-      <i class="bi bi-chat-left-text"></i> 32 reviews
-    `;
-    document.querySelector('.sold').innerHTML = `
-      <i class="fas fa-shopping-bag"></i> ${product.orders} sold
-    `;
+    document.querySelector('.reviews').innerHTML = `<i class="bi bi-chat-left-text"></i> 32 reviews`;
+    document.querySelector('.sold').innerHTML    = `<i class="fas fa-shopping-bag"></i> ${product.orders} sold`;
 
-    // Price tiers
     document.querySelector('.price-tiers').innerHTML = `
       <div class="tier">
         <span class="tier-price red">$${product.price.toFixed(2)}</span>
@@ -72,49 +56,23 @@ async function loadProductDetail() {
       </div>
     `;
 
-    // Details table
     document.querySelector('.detail-table').innerHTML = `
-      <div class="detail-row">
-        <span class="detail-label">Price:</span>
-        <span class="detail-value">Negotiable</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Category:</span>
-        <span class="detail-value">${product.category}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Brand:</span>
-        <span class="detail-value">${product.brand || 'N/A'}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Condition:</span>
-        <span class="detail-value">${product.condition || 'Brand new'}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Manufacturer:</span>
-        <span class="detail-value">${product.manufacturer || 'N/A'}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Stock:</span>
-        <span class="detail-value">${product.stock} items available</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Warranty:</span>
-        <span class="detail-value">2 years full warranty</span>
-      </div>
+      <div class="detail-row"><span class="detail-label">Price:</span><span class="detail-value">Negotiable</span></div>
+      <div class="detail-row"><span class="detail-label">Category:</span><span class="detail-value">${product.category}</span></div>
+      <div class="detail-row"><span class="detail-label">Brand:</span><span class="detail-value">${product.brand || 'N/A'}</span></div>
+      <div class="detail-row"><span class="detail-label">Condition:</span><span class="detail-value">${product.condition || 'Brand new'}</span></div>
+      <div class="detail-row"><span class="detail-label">Manufacturer:</span><span class="detail-value">${product.manufacturer || 'N/A'}</span></div>
+      <div class="detail-row"><span class="detail-label">Stock:</span><span class="detail-value">${product.stock} items available</span></div>
+      <div class="detail-row"><span class="detail-label">Warranty:</span><span class="detail-value">2 years full warranty</span></div>
     `;
 
-    // Main image
     document.getElementById('mainImage').src = product.image;
-
-    // Thumbnails
     document.querySelector('.thumbnail-list').innerHTML = `
       <div class="thumb active" onclick="changeImage(this, '${product.image}')">
         <img src="${product.image}" alt=""/>
       </div>
     `;
 
-    // Description tab
     document.getElementById('description').innerHTML = `
       <p class="desc-text">${product.description}</p>
       <table class="specs-table">
@@ -132,10 +90,8 @@ async function loadProductDetail() {
       </ul>
     `;
 
-    // Page title
     document.title = `${product.name} - Brand eCommerce`;
 
-    // Load related + you may like
     loadRelatedProducts(product.category, id);
     loadYouMayLike(product.category, id);
 
@@ -150,10 +106,8 @@ async function loadRelatedProducts(category, currentId) {
     const products = await getProducts({ category });
     const grid = document.querySelector('.related-grid');
     if (!grid) return;
-
     const related = products.filter(p => p.id !== currentId).slice(0, 6);
     if (related.length === 0) return;
-
     grid.innerHTML = '';
     related.forEach(product => {
       const card = document.createElement('a');
@@ -166,10 +120,7 @@ async function loadRelatedProducts(category, currentId) {
       `;
       grid.appendChild(card);
     });
-
-  } catch (err) {
-    console.error('Related products load nahi hue:', err);
-  }
+  } catch (err) { console.error('Related products load nahi hue:', err); }
 }
 
 // ===== LOAD YOU MAY LIKE =====
@@ -178,10 +129,8 @@ async function loadYouMayLike(category, currentId) {
     const products = await getProducts({ category });
     const list = document.querySelector('.like-list');
     if (!list) return;
-
     const filtered = products.filter(p => p.id !== currentId).slice(0, 5);
     if (filtered.length === 0) return;
-
     list.innerHTML = '';
     filtered.forEach(product => {
       const item = document.createElement('a');
@@ -196,23 +145,18 @@ async function loadYouMayLike(category, currentId) {
       `;
       list.appendChild(item);
     });
-
-  } catch (err) {
-    console.error('You may like load nahi hua:', err);
-  }
+  } catch (err) { console.error('You may like load nahi hua:', err); }
 }
 
 // ===== SEARCH =====
 const searchBtn   = document.querySelector('.search-bar button');
 const searchInput = document.getElementById('searchInput');
-
 if (searchBtn) {
   searchBtn.addEventListener('click', function() {
     const q = searchInput.value.trim();
     if (q) window.location.href = `products.html?search=${encodeURIComponent(q)}`;
   });
 }
-
 if (searchInput) {
   searchInput.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
@@ -229,16 +173,13 @@ loadProductDetail();
 function getCart() {
   return JSON.parse(localStorage.getItem('cart')) || [];
 }
-
 function saveCart(cart) {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
-
 function decreaseQty() {
   const input = document.getElementById('qtyInput');
   if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
 }
-
 function increaseQty() {
   const input = document.getElementById('qtyInput');
   input.value = parseInt(input.value) + 1;
@@ -248,8 +189,11 @@ function addToCart() {
   const id    = getProductIdFromURL();
   const qty   = parseInt(document.getElementById('qtyInput').value);
   const title = document.querySelector('.detail-title').textContent;
-  const price = parseFloat(document.querySelector('.tier-price').textContent.replace('$', ''));
+  const priceEl = document.querySelector('.tier-price');
+  const price = parseFloat(priceEl ? priceEl.textContent.replace('$', '') : '0');
   const image = document.getElementById('mainImage').src;
+
+  if (!id) { alert('Product not found!'); return; }
 
   const cart     = getCart();
   const existing = cart.find(item => item.id === id);
@@ -258,40 +202,48 @@ function addToCart() {
   } else {
     cart.push({ id, title, price, image, qty });
   }
-
   saveCart(cart);
 
   const btn = document.querySelector('.add-to-cart-btn');
-  btn.innerHTML        = '<i class="fas fa-check"></i> Added to cart!';
-  btn.style.background = '#00B517';
-  setTimeout(() => {
-    btn.innerHTML        = '<i class="fas fa-shopping-cart"></i> Add to cart';
-    btn.style.background = '';
-  }, 2000);
+  if (btn) {
+    btn.innerHTML        = '<i class="fas fa-check"></i> Added to cart!';
+    btn.style.background = '#00B517';
+    setTimeout(() => {
+      btn.innerHTML        = '<i class="fas fa-shopping-cart"></i> Add to cart';
+      btn.style.background = '';
+    }, 2000);
+  }
 }
 
 // ===== SEND INQUIRY =====
-document.querySelector('.send-inquiry-btn').addEventListener('click', function() {
-  const name = document.querySelector('.detail-title').textContent;
-  alert(`Your inquiry for "${name}" has been sent to the supplier!`);
-});
+const inquiryBtn2 = document.querySelector('.send-inquiry-btn');
+if (inquiryBtn2) {
+  inquiryBtn2.addEventListener('click', function() {
+    const name = document.querySelector('.detail-title').textContent;
+    alert(`Your inquiry for "${name}" has been sent to the supplier!`);
+  });
+}
 
 // ===== SAVE FOR LATER =====
-document.querySelector('.save-later').addEventListener('click', function() {
-  const id    = getProductIdFromURL();
-  const title = document.querySelector('.detail-title').textContent;
-  const image = document.getElementById('mainImage').src;
-  const price = parseFloat(document.querySelector('.tier-price').textContent.replace('$', ''));
+const saveLaterBtn = document.querySelector('.save-later');
+if (saveLaterBtn) {
+  saveLaterBtn.addEventListener('click', function() {
+    const id    = getProductIdFromURL();
+    const title = document.querySelector('.detail-title').textContent;
+    const image = document.getElementById('mainImage').src;
+    const priceEl = document.querySelector('.tier-price');
+    const price = parseFloat(priceEl ? priceEl.textContent.replace('$', '') : '0');
 
-  let saved      = JSON.parse(localStorage.getItem('savedItems')) || [];
-  const exists   = saved.find(item => item.id === id);
+    let saved    = JSON.parse(localStorage.getItem('savedItems')) || [];
+    const exists = saved.find(item => item.id === id);
 
-  if (!exists) {
-    saved.push({ id, title, image, price });
-    localStorage.setItem('savedItems', JSON.stringify(saved));
-    this.innerHTML   = '<i class="fas fa-heart"></i> <span>Saved!</span>';
-    this.style.color = 'var(--red-badge)';
-  } else {
-    alert('Already saved!');
-  }
-});
+    if (!exists) {
+      saved.push({ id, title, image, price });
+      localStorage.setItem('savedItems', JSON.stringify(saved));
+      this.innerHTML   = '<i class="fas fa-heart"></i> <span>Saved!</span>';
+      this.style.color = 'var(--red-badge)';
+    } else {
+      alert('Already saved!');
+    }
+  });
+}

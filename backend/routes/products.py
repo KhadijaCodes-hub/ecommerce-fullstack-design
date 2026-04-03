@@ -1,112 +1,93 @@
-import sys
-import os
+import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import APIRouter, HTTPException
-from database import products_collection
+from database import database, products_table
 from models.product_models import Product, ProductUpdate
-from bson import ObjectId
+import sqlalchemy
 
 router = APIRouter()
 
-# Helper — MongoDB _id ko string mein convert karo
-def product_helper(product) -> dict:
+def product_helper(row) -> dict:
     return {
-        "id": str(product["_id"]),
-        "name": product["name"],
-        "price": product["price"],
-        "old_price": product.get("old_price", None),
-        "image": product["image"],
-        "description": product["description"],
-        "category": product["category"],
-        "brand": product.get("brand", None),
-        "manufacturer": product.get("manufacturer", None),
-        "condition": product.get("condition", "Brand new"),
-        "stock": product["stock"],
-        "rating": product.get("rating", 7.5),
-        "orders": product.get("orders", 154),
-        "free_shipping": product.get("free_shipping", True),
+        "id":           str(row["id"]),
+        "name":         row["name"],
+        "price":        row["price"],
+        "old_price":    row["old_price"],
+        "image":        row["image"],
+        "description":  row["description"],
+        "category":     row["category"],
+        "brand":        row["brand"],
+        "manufacturer": row["manufacturer"],
+        "condition":    row["condition"],
+        "stock":        row["stock"],
+        "rating":       row["rating"],
+        "orders":       row["orders"],
+        "free_shipping":row["free_shipping"],
     }
 
-# ===== GET ALL PRODUCTS =====
+# GET ALL PRODUCTS
 @router.get("/")
 async def get_products(
-    category: str = None,
-    search: str = None,
-    brand: str = None,
-    min_price: float = None,
-    max_price: float = None,
-    condition: str = None,
-    rating: float = None,
-    manufacturer: str = None,
-    free_shipping: bool = None
+    category: str = None, search: str = None,
+    brand: str = None, manufacturer: str = None,
+    condition: str = None, min_price: float = None,
+    max_price: float = None, rating: float = None
 ):
-    query = {}
-    if category:
-        query["category"] = {"$regex": category, "$options": "i"}
-    if search:
-        query["name"] = {"$regex": search, "$options": "i"}
-    if brand:
-        query["brand"] = {"$regex": brand, "$options": "i"}
-    if manufacturer:
-        query["manufacturer"] = {"$regex": manufacturer, "$options": "i"}
-    if condition:
-        query["condition"] = {"$regex": condition, "$options": "i"}
-    if min_price is not None or max_price is not None:
-        query["price"] = {}
-        if min_price is not None:
-            query["price"]["$gte"] = min_price
-        if max_price is not None:
-            query["price"]["$lte"] = max_price
-    if rating is not None:
-        query["rating"] = {"$gte": rating}
-    if free_shipping is not None:
-        query["free_shipping"] = free_shipping
+    query = products_table.select()
+    if category:    query = query.where(products_table.c.category.ilike(f"%{category}%"))
+    if search:      query = query.where(products_table.c.name.ilike(f"%{search}%"))
+    if brand:       query = query.where(products_table.c.brand.ilike(f"%{brand}%"))
+    if manufacturer:query = query.where(products_table.c.manufacturer.ilike(f"%{manufacturer}%"))
+    if condition:   query = query.where(products_table.c.condition.ilike(f"%{condition}%"))
+    if min_price:   query = query.where(products_table.c.price >= min_price)
+    if max_price:   query = query.where(products_table.c.price <= max_price)
+    if rating:      query = query.where(products_table.c.rating >= rating)
 
-    products = []
-    async for product in products_collection.find(query):
-        products.append(product_helper(product))
-    return products
+    rows = await database.fetch_all(query)
+    return [product_helper(r) for r in rows]
 
-# ===== GET SINGLE PRODUCT =====
+# GET SINGLE PRODUCT
 @router.get("/{id}")
-async def get_product(id: str):
-    product = await products_collection.find_one({"_id": ObjectId(id)})
-    if not product:
+async def get_product(id: int):
+    query = products_table.select().where(products_table.c.id == id)
+    row   = await database.fetch_one(query)
+    if not row:
         raise HTTPException(status_code=404, detail="Product not found")
-    return product_helper(product)
+    return product_helper(row)
 
-# ===== CREATE PRODUCT =====
+# CREATE PRODUCT
 @router.post("/")
 async def create_product(product: Product):
-    result = await products_collection.insert_one(product.dict())
-    new_product = await products_collection.find_one({"_id": result.inserted_id})
-    return product_helper(new_product)
-
-# ===== UPDATE PRODUCT =====
-@router.put("/{id}")
-async def update_product(id: str, product: ProductUpdate):
-    update_data = {k: v for k, v in product.dict().items() if v is not None}
-    
-    if not update_data:
-        raise HTTPException(status_code=400, detail="Koi data nahi diya update ke liye")
-    
-    result = await products_collection.update_one(
-        {"_id": ObjectId(id)},
-        {"$set": update_data}
+    query = products_table.insert().values(
+        name=product.name, price=product.price,
+        old_price=product.old_price, image=product.image,
+        description=product.description, category=product.category,
+        brand=product.brand, manufacturer=product.manufacturer,
+        condition=product.condition, stock=product.stock,
+        rating=product.rating, orders=product.orders,
+        free_shipping=product.free_shipping
     )
-    
-    # Modified count 0 ho lekin product exist karta ho — ye bhi handle karo
-    updated = await products_collection.find_one({"_id": ObjectId(id)})
-    if not updated:
-        raise HTTPException(status_code=404, detail="Product not found")
-    
-    return product_helper(updated)
+    pid = await database.execute(query)
+    row = await database.fetch_one(products_table.select().where(products_table.c.id == pid))
+    return product_helper(row)
 
-# ===== DELETE PRODUCT =====
-@router.delete("/{id}")
-async def delete_product(id: str):
-    result = await products_collection.delete_one({"_id": ObjectId(id)})
-    if result.deleted_count == 0:
+# UPDATE PRODUCT
+@router.put("/{id}")
+async def update_product(id: int, product: ProductUpdate):
+    update_data = {k: v for k, v in product.dict().items() if v is not None}
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No data provided")
+    query = products_table.update().where(products_table.c.id == id).values(**update_data)
+    await database.execute(query)
+    row = await database.fetch_one(products_table.select().where(products_table.c.id == id))
+    if not row:
         raise HTTPException(status_code=404, detail="Product not found")
+    return product_helper(row)
+
+# DELETE PRODUCT
+@router.delete("/{id}")
+async def delete_product(id: int):
+    query = products_table.delete().where(products_table.c.id == id)
+    await database.execute(query)
     return {"message": "Product deleted successfully"}

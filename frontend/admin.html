@@ -1,239 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Panel - Brand eCommerce</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="css/style.css"/>
-  <link rel="stylesheet" href="css/admin.css"/>
+  <link rel="shortcut icon" href="assets/images/shop.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/admin.css" />
 </head>
+
 <body>
 
-<!-- ===== ADMIN NAVBAR ===== -->
-<header class="admin-navbar">
-  <div class="admin-nav-left">
-    <a href="index.html" class="admin-logo">
-      <img src="assets/images/logo-colored.png" alt="Logo"/>
-    </a>
-    <span class="admin-badge">Admin Panel</span>
+  <!-- ===== ADMIN NAVBAR ===== -->
+  <header class="admin-navbar">
+    <div class="admin-nav-left">
+      <a href="index.html" class="admin-logo">
+        <img src="assets/images/logo-colored.png" alt="Logo" />
+      </a>
+      <span class="admin-badge">Admin Panel</span>
+    </div>
+    <div class="admin-nav-right">
+      <span class="admin-user"><i class="fas fa-user-shield"></i> <span id="adminName">Admin</span></span>
+      <button class="admin-logout-btn" onclick="logoutAdmin()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== ADMIN LAYOUT ===== -->
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <ul>
+        <li class="active" onclick="showSection('products')">
+          <i class="fas fa-box"></i> Products
+        </li>
+        <li onclick="showSection('add-product')">
+          <i class="fas fa-plus-circle"></i> Add Product
+        </li>
+        <li onclick="showSection('users')">
+          <i class="fas fa-users"></i> Users
+        </li>
+      </ul>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+
+      <!-- ===== PRODUCTS SECTION ===== -->
+      <section id="section-products" class="admin-section active">
+        <div class="section-header">
+          <h2>All Products</h2>
+          <button class="btn-primary" onclick="showSection('add-product')">
+            <i class="fas fa-plus"></i> Add New Product
+          </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="admin-stats">
+          <div class="stat-card">
+            <i class="fas fa-box"></i>
+            <div>
+              <p class="stat-num" id="totalProducts">0</p>
+              <p class="stat-label">Total Products</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-tags"></i>
+            <div>
+              <p class="stat-num" id="totalCategories">0</p>
+              <p class="stat-label">Categories</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-truck"></i>
+            <div>
+              <p class="stat-num" id="freeShippingCount">0</p>
+              <p class="stat-label">Free Shipping</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div class="table-toolbar">
+          <input type="text" id="adminSearch" placeholder="Search products..." oninput="filterTable()" />
+        </div>
+
+        <!-- Products Table -->
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <tr>
+                <td colspan="6" style="text-align:center;padding:20px;">
+                  <i class="fas fa-spinner fa-spin"></i> Loading...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== ADD/EDIT PRODUCT SECTION ===== -->
+      <section id="section-add-product" class="admin-section">
+        <div class="section-header">
+          <h2 id="formTitle">Add New Product</h2>
+          <button class="btn-secondary" onclick="showSection('products')">
+            <i class="fas fa-arrow-left"></i> Back to Products
+          </button>
+        </div>
+
+        <div class="admin-form-card">
+          <form id="productForm" onsubmit="submitProduct(event)">
+            <input type="hidden" id="editProductId" />
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Product Name *</label>
+                <input type="text" id="prodName" placeholder="e.g. Samsung Galaxy S23" required />
+              </div>
+              <div class="form-group">
+                <label>Category *</label>
+                <input type="text" id="prodCategory" placeholder="e.g. Smartphones" required />
+              </div>
+              <div class="form-group">
+                <label>Price *</label>
+                <input type="number" id="prodPrice" placeholder="e.g. 999.99" step="0.01" required />
+              </div>
+              <div class="form-group">
+                <label>Old Price</label>
+                <input type="number" id="prodOldPrice" placeholder="e.g. 1099.99" step="0.01" />
+              </div>
+              <div class="form-group">
+                <label>Stock *</label>
+                <input type="number" id="prodStock" placeholder="e.g. 50" required />
+              </div>
+              <div class="form-group">
+                <label>Brand</label>
+                <input type="text" id="prodBrand" placeholder="e.g. Samsung" />
+              </div>
+              <div class="form-group">
+                <label>Manufacturer</label>
+                <input type="text" id="prodManufacturer" placeholder="e.g. Samsung" />
+              </div>
+              <div class="form-group">
+                <label>Condition</label>
+                <select id="prodCondition">
+                  <option>Brand new</option>
+                  <option>Refurbished</option>
+                  <option>Old items</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Rating</label>
+                <input type="number" id="prodRating" placeholder="e.g. 8.5" step="0.1" min="0" max="10" />
+              </div>
+              <div class="form-group">
+                <label>Orders</label>
+                <input type="number" id="prodOrders" placeholder="e.g. 154" />
+              </div>
+              <div class="form-group full-width">
+                <label>Image Path *</label>
+                <input type="text" id="prodImage" placeholder="e.g. assets/images/smartwatch.png" required />
+              </div>
+              <div class="form-group full-width">
+                <label>Description *</label>
+                <textarea id="prodDescription" placeholder="Product description..." rows="4" required></textarea>
+              </div>
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="prodFreeShipping" checked />
+                  Free Shipping
+                </label>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn-secondary" onclick="resetForm()">
+                <i class="fas fa-times"></i> Reset
+              </button>
+              <button type="submit" class="btn-primary" id="submitBtn">
+                <i class="fas fa-save"></i> Save Product
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ===== USERS SECTION ===== -->
+      <section id="section-users" class="admin-section">
+        <div class="section-header">
+          <h2>All Users</h2>
+        </div>
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <tr>
+                <td colspan="3" style="text-align:center;padding:20px;">
+                  <i class="fas fa-spinner fa-spin"></i> Loading...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
   </div>
-  <div class="admin-nav-right">
-    <span class="admin-user"><i class="fas fa-user-shield"></i> <span id="adminName">Admin</span></span>
-    <button class="admin-logout-btn" onclick="logoutAdmin()">
-      <i class="fas fa-sign-out-alt"></i> Logout
-    </button>
-  </div>
-</header>
 
-<!-- ===== ADMIN LAYOUT ===== -->
-<div class="admin-layout">
-
-  <!-- SIDEBAR -->
-  <aside class="admin-sidebar">
-    <ul>
-      <li class="active" onclick="showSection('products')">
-        <i class="fas fa-box"></i> Products
-      </li>
-      <li onclick="showSection('add-product')">
-        <i class="fas fa-plus-circle"></i> Add Product
-      </li>
-      <li onclick="showSection('users')">
-        <i class="fas fa-users"></i> Users
-      </li>
-    </ul>
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <main class="admin-main">
-
-    <!-- ===== PRODUCTS SECTION ===== -->
-    <section id="section-products" class="admin-section active">
-      <div class="section-header">
-        <h2>All Products</h2>
-        <button class="btn-primary" onclick="showSection('add-product')">
-          <i class="fas fa-plus"></i> Add New Product
-        </button>
+  <!-- ===== DELETE MODAL ===== -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+      <h3>Delete Product</h3>
+      <p>Are you sure you want to delete this product?</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn-danger" onclick="confirmDelete()">Delete</button>
       </div>
-
-      <!-- Stats -->
-      <div class="admin-stats">
-        <div class="stat-card">
-          <i class="fas fa-box"></i>
-          <div>
-            <p class="stat-num" id="totalProducts">0</p>
-            <p class="stat-label">Total Products</p>
-          </div>
-        </div>
-        <div class="stat-card">
-          <i class="fas fa-tags"></i>
-          <div>
-            <p class="stat-num" id="totalCategories">0</p>
-            <p class="stat-label">Categories</p>
-          </div>
-        </div>
-        <div class="stat-card">
-          <i class="fas fa-truck"></i>
-          <div>
-            <p class="stat-num" id="freeShippingCount">0</p>
-            <p class="stat-label">Free Shipping</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Search -->
-      <div class="table-toolbar">
-        <input type="text" id="adminSearch" placeholder="Search products..." oninput="filterTable()"/>
-      </div>
-
-      <!-- Products Table -->
-      <div class="table-wrapper">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Stock</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="productsTableBody">
-            <tr><td colspan="6" style="text-align:center;padding:20px;">
-              <i class="fas fa-spinner fa-spin"></i> Loading...
-            </td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- ===== ADD/EDIT PRODUCT SECTION ===== -->
-    <section id="section-add-product" class="admin-section">
-      <div class="section-header">
-        <h2 id="formTitle">Add New Product</h2>
-        <button class="btn-secondary" onclick="showSection('products')">
-          <i class="fas fa-arrow-left"></i> Back to Products
-        </button>
-      </div>
-
-      <div class="admin-form-card">
-        <form id="productForm" onsubmit="submitProduct(event)">
-          <input type="hidden" id="editProductId"/>
-
-          <div class="form-grid">
-            <div class="form-group">
-              <label>Product Name *</label>
-              <input type="text" id="prodName" placeholder="e.g. Samsung Galaxy S23" required/>
-            </div>
-            <div class="form-group">
-              <label>Category *</label>
-              <input type="text" id="prodCategory" placeholder="e.g. Smartphones" required/>
-            </div>
-            <div class="form-group">
-              <label>Price *</label>
-              <input type="number" id="prodPrice" placeholder="e.g. 999.99" step="0.01" required/>
-            </div>
-            <div class="form-group">
-              <label>Old Price</label>
-              <input type="number" id="prodOldPrice" placeholder="e.g. 1099.99" step="0.01"/>
-            </div>
-            <div class="form-group">
-              <label>Stock *</label>
-              <input type="number" id="prodStock" placeholder="e.g. 50" required/>
-            </div>
-            <div class="form-group">
-              <label>Brand</label>
-              <input type="text" id="prodBrand" placeholder="e.g. Samsung"/>
-            </div>
-            <div class="form-group">
-              <label>Manufacturer</label>
-              <input type="text" id="prodManufacturer" placeholder="e.g. Samsung"/>
-            </div>
-            <div class="form-group">
-              <label>Condition</label>
-              <select id="prodCondition">
-                <option>Brand new</option>
-                <option>Refurbished</option>
-                <option>Old items</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Rating</label>
-              <input type="number" id="prodRating" placeholder="e.g. 8.5" step="0.1" min="0" max="10"/>
-            </div>
-            <div class="form-group">
-              <label>Orders</label>
-              <input type="number" id="prodOrders" placeholder="e.g. 154"/>
-            </div>
-            <div class="form-group full-width">
-              <label>Image Path *</label>
-              <input type="text" id="prodImage" placeholder="e.g. assets/images/smartwatch.png" required/>
-            </div>
-            <div class="form-group full-width">
-              <label>Description *</label>
-              <textarea id="prodDescription" placeholder="Product description..." rows="4" required></textarea>
-            </div>
-            <div class="form-group">
-              <label class="checkbox-label">
-                <input type="checkbox" id="prodFreeShipping" checked/>
-                Free Shipping
-              </label>
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-secondary" onclick="resetForm()">
-              <i class="fas fa-times"></i> Reset
-            </button>
-            <button type="submit" class="btn-primary" id="submitBtn">
-              <i class="fas fa-save"></i> Save Product
-            </button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- ===== USERS SECTION ===== -->
-    <section id="section-users" class="admin-section">
-      <div class="section-header">
-        <h2>All Users</h2>
-      </div>
-      <div class="table-wrapper">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-            </tr>
-          </thead>
-          <tbody id="usersTableBody">
-            <tr><td colspan="3" style="text-align:center;padding:20px;">
-              <i class="fas fa-spinner fa-spin"></i> Loading...
-            </td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-  </main>
-</div>
-
-<!-- ===== DELETE MODAL ===== -->
-<div class="modal-overlay" id="deleteModal">
-  <div class="modal">
-    <h3>Delete Product</h3>
-    <p>Are you sure you want to delete this product?</p>
-    <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn-danger" onclick="confirmDelete()">Delete</button>
     </div>
   </div>
-</div>
 
-<script src="js/api.js"></script>
-<script src="js/admin.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
 </body>
+
 </html>
