@@ -3,7 +3,8 @@
 //  ecommerce-fullstack-design
 // =============================================
 
-const CART_API_URL = 'http://127.0.0.1:8000/api';
+const CART_API_URL = 'https://ecommerce-fullstack-design-production-406a.up.railway.app/api';
+
 let appliedCouponDiscount = 0;
 
 // ===== CART HELPERS =====

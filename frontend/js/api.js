@@ -1,5 +1,4 @@
-const API_URL = 'http://127.0.0.1:8000/api';
-
+const API_URL = 'https://ecommerce-fullstack-design-production-406a.up.railway.app/api';
 async function getProducts(filters = {}) {
   let url = `${API_URL}/products/?`;
   if (filters.category)     url += `category=${filters.category}&`;

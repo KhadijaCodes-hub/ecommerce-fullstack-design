@@ -3,7 +3,7 @@
 //  ecommerce-fullstack-design
 // =============================================
 
-const ADMIN_API_URL = 'http://127.0.0.1:8000/api';
+const ADMIN_API_URL = 'https://ecommerce-fullstack-design-production-406a.up.railway.app/api';
 let deleteProductId = null;
 let allProducts     = [];
 

@@ -236,7 +236,7 @@ if (inquiryBtn) {
     inquiryBtn.disabled    = true;
 
     try {
-      await fetch('http://127.0.0.1:8000/api/general/inquiry', {
+      await fetch('https://ecommerce-fullstack-design-production-406a.up.railway.app/api/general/inquiry', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -291,7 +291,7 @@ if (subscribeBtn) {
     }
 
     // Backend pe save karo
-    fetch('http://127.0.0.1:8000/api/general/newsletter', {
+    fetch('https://ecommerce-fullstack-design-production-406a.up.railway.app/api/general/newsletter', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email })
