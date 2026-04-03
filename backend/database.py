@@ -75,4 +75,9 @@ orders_table = sqlalchemy.Table(
     sqlalchemy.Column("created_at", sqlalchemy.String(100)),
 )
 
-engine = sqlalchemy.create_engine(DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://"))
+if DATABASE_URL:
+    engine = sqlalchemy.create_engine(
+        DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://")
+    )
+else:
+    engine = None
